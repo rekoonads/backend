@@ -1,6 +1,7 @@
 import { model, Schema } from 'mongoose';
 const campaignSchema = new Schema(
   {
+    userId: {type: String},
     campaignId: { type: String, required: true, unique: true },
     campaignName: { type: String, required: true },
     campaignGoal: { type: String, required: true },
@@ -17,4 +18,4 @@ const campaignSchema = new Schema(
 );
 const Campaignmodel = model('Campaigns', campaignSchema);
 
-module.exports = Campaignmodel;
+export default Campaignmodel;

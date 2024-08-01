@@ -15,5 +15,6 @@ const strategySchema = new Schema({
     timestamps: true
 });
 
-export const Strategy = model('Strategies', strategySchema)
+const Strategy = model('Strategies', strategySchema)
 
+export default Strategy;
