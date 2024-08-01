@@ -14,4 +14,4 @@ const advertiser = new Schema(
     timestamps: true,
   },
 );
-export const Advertisermodel = model('Advertisers', advertiser);
+export default model('Advertisers', advertiser);
