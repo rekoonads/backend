@@ -1,28 +1,26 @@
 import {Agencymodel} from '../models/Agencies.js';
+import {userModel} from '../models/User.js';
 
 export default async (req, res) => {
     try {
         const {
-            agencyId,
-            agencyName,
-            gstNumber,
-            legalName,
-            address,
-            gstCertificate,
-            cinNumber,
-            advertisers
-          } = req.body;
+            id,
+            name,
+            created_by,
+            object
+          } = req.body.data;
         
           const new_agency =  new Agencymodel({
-            agencyId,
-            agencyName,
-            gstNumber,
-            legalName,
-            address,
-            gstCertificate,
-            cinNumber,
-            advertisers
+            agencyId : id,
+            agencyName: name
           });
+          console.log(id+"  id " + name+"  name "+object);
+          console.log(new_agency);
+
+          userModel.updateOne(
+              { userId: created_by },
+              { $set: { userType: object } }
+          );
           let response_data =[];
           Agencymodel.create(new_agency).then((agency) => {
              response_data.push({agency_data: agency});
