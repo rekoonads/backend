@@ -1,4 +1,4 @@
-import {Agencymodel} from '../models/Agencies';
+import {Agencymodel} from '../models/Agencies.js';
 
 export default async (req, res) => {
     try {
