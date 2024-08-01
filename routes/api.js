@@ -17,7 +17,10 @@ import createStrategy from "../controller/strategy/createStrategy.js";
 
 const router = Router();
 
+//Agency
 router.post("/addAgency", createAgency);
+
+//User
 router.post("/addUser", userCreate);
 
 //Campaign
