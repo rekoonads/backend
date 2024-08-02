@@ -37,9 +37,9 @@ router.post("/strategy", createStrategy);
 
 //Advertisers
 
-router.post('/add-advertiser',createAdvertiser);
+router.post('/api/add-advertiser',createAdvertiser);
 router.post("/advertisers", advertiserCreation);
 router.route('/advertisers/:userId').get(getAdvertiser).patch(updateAdvertisers).delete(deleteAdvertisers);
-router.get('/search-user/:user_id',searchUser);
+router.get('/api/search-user/:user_id',searchUser);
 
 export default router
