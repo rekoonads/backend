@@ -21,7 +21,7 @@ export default async (req, res) => {
         console.log(new_user);
         let response_data = [];
 
-        const user = await userModel.findById(id);
+        const user = await userModel.findOne({ userId: id })
 
         if (user) {
             console.log(`User with ID ${id} already exists.`);

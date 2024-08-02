@@ -20,4 +20,6 @@ const router = Router();
 //Agency
 router.post("/addAgency", createAgency);
 router.post('/addUser',userCreate)
+router.post('/webhook/user-created',userCreate);
+router.post('/webhook/organization-created',createAgency);
 export default router
