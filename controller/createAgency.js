@@ -16,19 +16,27 @@ export default async (req, res) => {
 
         const new_agency = new Agencymodel({
             agencyId: id,
+            createdBy: created_by,
             agencyName: name
         });
-
-        console.log(id + "  id " + name + "  name " + object);
+ 
+        console.log(id + "  id " + name + "  name " + object+"  created "+created_by);
         console.log(new_agency);
+        let response_data = [];
 
         await userModel.updateOne(
             { userId: created_by },
             { $set: { userType: object } }
         );
-
-        const agency = await Agencymodel.create(new_agency);
-        const response_data = [{ agency_data: agency }];
+        const agency_test = await Agencymodel.findOne({ agencyId: id });
+        if(agency_test){
+            console.log(`agency with ID ${id} already exists.`);
+            return res.status(409).json({ error: `Agency with ID ${id} already exists.` });
+        }else{
+            const agency = await Agencymodel.create(new_agency);
+            response_data.push({ agency_data: agency });
+        }
+       
 
         return res.status(201).json(response_data);
     } catch (error) {

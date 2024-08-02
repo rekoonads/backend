@@ -3,6 +3,7 @@ const agencies = new Schema(
   {
     agencyId: { type: String, required: true, unique: true },
     agencyName: { type: String, required: true },
+    createdBy : {type: String, require: true},
     gstNumber: { type: String},
     legalName: { type: String },
     address: { type: String},
