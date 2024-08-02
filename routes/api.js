@@ -21,26 +21,26 @@ import updateAgency from "../controller/agency/updateAgency.js";
 const router = Router();
 
 //Agency
-router.post("/addAgency", createAgency);
-router.post('/addUser',userCreate)
-router.post('/webhook/user-created',userCreate);
-router.post('/webhook/organization-created',createAgency);
+router.post("/api/addAgency", createAgency);
+router.post('/api/addUser',userCreate)
+router.post('/api/webhook/user-created',userCreate);
+router.post('/api/webhook/organization-created',createAgency);
 
 //Campaign
-router.route("/campaigns/:userId").get(campaignGet).patch(campaignUpdate).delete(deleteCampaign)
-router.post("/campaigns", createCampaign);
+router.route("/api/campaigns/:userId").get(campaignGet).patch(campaignUpdate).delete(deleteCampaign)
+router.post("/api/campaigns", createCampaign);
 
 
 //Strategy
-router.route("/strategy/:userId").get(getStrategy).patch(updateStrategy).delete(deleteStrategy)
-router.post("/strategy", createStrategy);
+router.route("/api/strategy/:userId").get(getStrategy).patch(updateStrategy).delete(deleteStrategy)
+router.post("/api/strategy", createStrategy);
 
 
 //Advertisers
 
 router.post('/api/add-advertiser',createAdvertiser);
-router.post("/advertisers", advertiserCreation);
-router.route('/advertisers/:userId').get(getAdvertiser).patch(updateAdvertisers).delete(deleteAdvertisers);
-router.get('/search-user/:user_id',searchUser);
-router.post('/update-agency/:agency_id',updateAgency)
+router.post("/api/advertisers", advertiserCreation);
+router.route('/api/advertisers/:userId').get(getAdvertiser).patch(updateAdvertisers).delete(deleteAdvertisers);
+router.get('/api/search-user/:user_id',searchUser);
+router.post('/api/update-agency/:agency_id',updateAgency)
 export default router
