@@ -7,9 +7,13 @@ import pkg from "body-parser";
 import apiRouter from "./routes/api.js";
 import helment from "helmet";
 import compression from "compression";
+import multer from "multer";
 
 const { urlencoded, json } = pkg;
 const PORT = process.env.PORT || 8080;
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 const app = express();
 
