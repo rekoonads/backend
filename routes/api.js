@@ -23,5 +23,21 @@ router.post("/addAgency", createAgency);
 router.post('/addUser',userCreate)
 router.post('/webhook/user-created',userCreate);
 router.post('/webhook/organization-created',createAgency);
+
+//Campaign
+router.route("/campaigns/:userId").get(campaignGet).patch(campaignUpdate).delete(deleteCampaign)
+router.post("/campaigns", createCampaign);
+
+
+//Strategy
+router.route("/strategy/:userId").get(getStrategy).patch(updateStrategy).delete(deleteStrategy)
+router.post("/strategy", createStrategy);
+
+
+//Advertisers
+
 router.post('/add-advertiser',createAdvertiser);
+router.post("/advertisers", advertiserCreation);
+router.route('/advertisers/:userId').get(getAdvertiser).patch(updateAdvertisers).delete(deleteAdvertisers);
+
 export default router
