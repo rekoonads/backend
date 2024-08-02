@@ -13,6 +13,7 @@ import getStrategy from "../controller/strategy/getStrategy.js";
 import updateStrategy from "../controller/strategy/updateStrategy.js";
 import deleteStrategy from "../controller/strategy/deleteStrategy.js";
 import createStrategy from "../controller/strategy/createStrategy.js";
+import createAdvertiser from "../controller/advertisers/createAdvertiser.js";
 
 
 const router = Router();
@@ -22,4 +23,5 @@ router.post("/addAgency", createAgency);
 router.post('/addUser',userCreate)
 router.post('/webhook/user-created',userCreate);
 router.post('/webhook/organization-created',createAgency);
+router.post('/add-advertiser',createAdvertiser);
 export default router

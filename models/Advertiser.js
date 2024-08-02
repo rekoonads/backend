@@ -3,6 +3,7 @@ const advertiser = new Schema(
   {
     advertiserId: { type: String },
     advertiserName: { type: String },
+    createdBy : {type: String},
     advertiserLogo: { type: String },
     gstNumber: { type: String },
     legalName: { type: String },
