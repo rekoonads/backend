@@ -15,6 +15,7 @@ import deleteStrategy from "../controller/strategy/deleteStrategy.js";
 import createStrategy from "../controller/strategy/createStrategy.js";
 import createAdvertiser from "../controller/advertisers/createAdvertiser.js";
 import searchUser from "../controller/searchUser.js";
+import updateAgency from "../controller/agency/updateAgency.js";
 
 
 const router = Router();
@@ -40,6 +41,6 @@ router.post("/strategy", createStrategy);
 router.post('/api/add-advertiser',createAdvertiser);
 router.post("/advertisers", advertiserCreation);
 router.route('/advertisers/:userId').get(getAdvertiser).patch(updateAdvertisers).delete(deleteAdvertisers);
-router.get('/api/search-user/:user_id',searchUser);
-
+router.get('/search-user/:user_id',searchUser);
+router.post('/update-agency/:agency_id',updateAgency)
 export default router
