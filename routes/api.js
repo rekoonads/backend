@@ -43,4 +43,5 @@ router.post("/api/advertisers", advertiserCreation);
 router.route('/api/advertisers/:userId').get(getAdvertiser).patch(updateAdvertisers).delete(deleteAdvertisers);
 router.get('/api/search-user/:user_id',searchUser);
 router.post('/api/update-agency/:agency_id',updateAgency)
+router.get('/api/search-agency/:agency_id',searchUser);
 export default router
