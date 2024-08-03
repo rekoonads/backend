@@ -36,11 +36,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/", (req, res) => {
-  res.send("Razorpay Payment Gateway Using React And Node Js ");
-});
-app.use("/api/payment", payment);
-
 app.use(
   cors({
     origin: ["http://localhost:5173", "https://rekoon-ads.vercel.app"],
@@ -50,6 +45,7 @@ app.use(
 
 //Routing
 app.use("/", apiRouter);
+app.use("/api/payment", payment);
 
 // Save server loader function
 let server;
