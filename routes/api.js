@@ -28,7 +28,7 @@ router.post('/api/webhook/organization-created',createAgency);
 
 //Campaign
 router.route("/api/campaigns/:userId").get(campaignGet).patch(campaignUpdate).delete(deleteCampaign)
-router.post("/api/campaigns", createCampaign);
+router.post("/api/campaigns", createCampaign); // It is checked and this is working 
 
 
 //Strategy
