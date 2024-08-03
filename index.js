@@ -8,7 +8,7 @@ import apiRouter from "./routes/api.js";
 import helment from "helmet";
 import compression from "compression";
 import multer from "multer";
-import Razorpay from "razorpay";
+import payment from "./routes/payment.js";
 
 const { urlencoded, json } = pkg;
 const PORT = process.env.PORT || 8080;
@@ -36,62 +36,17 @@ app.use((req, res, next) => {
   next();
 });
 
-app.post("/orders", async (req, res) => {
-  const razorpay = new Razorpay({
-    key_id: "rzp_live_Av2lUuqQk77kId",
-    key_secret: "drJ9A1vjLMlGKS8rTwQgwTZZ",
-  });
-
-  const options = {
-    amount: req.body.amount,
-    currency: req.body.currency,
-    receipt: "receipt#1",
-    payment_capture: 1,
-  };
-  try {
-    const response = await razorpay.orders.create(options);
-
-    res.json({
-      order_id: response.id,
-      currency: response.currency,
-      amount: response.amount,
-    });
-
-    res.json({});
-  } catch (error) {
-    res.status(500).send("Internnal server error");
-  }
+app.get("/", (req, res) => {
+  res.send("Razorpay Payment Gateway Using React And Node Js ");
 });
+app.use("/api/payment", payment);
 
-app.get("/payment/:paymentId", async (req, res) => {
-  const { paymentId } = req.params;
-
-  const razorpay = new Razorpay({
-    key_id: "rzp_live_Av2lUuqQk77kId",
-    key_secret: "drJ9A1vjLMlGKS8rTwQgwTZZ",
-  });
-
-  try {
-    const payment = await razorpay.payments.fetch(paymentId);
-    if (!payment) {
-      return res.status(500).json("Error at razorpay loading");
-    }
-
-    res.json({
-      status: payment.status,
-      method: payment.method,
-      amount: payment.amount,
-      currency: payment.currency,
-    });
-  } catch (error) {
-    res.status(500).json("failed  to fetch");
-  }
-});
-
-// app.use(cors({
-//   origin:['http://localhost:5173'],
-//   methods: ['GET','POST','PATCH','PUT','DELETE']
-// }))
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://rekoon-ads.vercel.app"],
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
+  })
+);
 
 //Routing
 app.use("/", apiRouter);
