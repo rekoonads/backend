@@ -8,6 +8,7 @@ import apiRouter from "./routes/api.js";
 import helment from "helmet";
 import compression from "compression";
 import multer from "multer";
+import payment from "./routes/payment.js";
 
 const { urlencoded, json } = pkg;
 const PORT = process.env.PORT || 8080;
@@ -24,22 +25,27 @@ app.use(helment());
 app.use(compression());
 
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:5173"); 
+  res.header("Access-Control-Allow-Origin", "http://localhost:5173");
+  res.header("Access-Control-Allow-Origin", "https://rekoon-ads.vercel.app");
+  res.header(
+    "Access-Control-Allow-Origin",
+    "https://api.cashfree.com/verification/gstin"
+  );
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT,PATCH,DELETE");
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   next();
 });
 
-// app.use(cors({
-//   origin:['http://localhost:5173'],
-//   methods: ['GET','POST','PATCH','PUT','DELETE']
-// }))
-
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://rekoon-ads.vercel.app"],
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
+  })
+);
 
 //Routing
 app.use("/", apiRouter);
-
-
+app.use("/api/payment", payment);
 
 // Save server loader function
 let server;
