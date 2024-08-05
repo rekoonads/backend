@@ -17,10 +17,7 @@ import createAdvertiser from "../controller/advertisers/createAdvertiser.js";
 import searchUser from "../controller/searchUser.js";
 import updateAgency from "../controller/agency/updateAgency.js";
 import getAgency from "../controller/agency/getAgency.js";
-
-
 const router = Router();
-
 //Agency
 router.post("/api/addAgency", createAgency);
 router.post("/api/addUser", userCreate);
