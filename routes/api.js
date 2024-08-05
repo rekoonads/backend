@@ -30,13 +30,24 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_SECRET,
   });
   const storage = new CloudinaryStorage({
-    cloudinary: cloudinary
+    cloudinary: cloudinary,
+    params: async (req, file) => {
+        if (file.mimetype.startsWith('video/')) {
+          return {
+            resource_type: 'video'
+          };
+        } else {
+          return {
+            resource_type: 'image'
+          };
+        }
+      },
   });
 
 
 const upload = multer({ storage: storage });
 
-app.post('/upload', upload.single('image'), (req, res) => {
+app.post('/upload', upload.single('video'), (req, res) => {
     if (req.file && req.file.path) {
       res.json({ url: req.file.path });
     } else {
