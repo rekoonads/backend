@@ -47,7 +47,7 @@ cloudinary.config({
 
 const upload = multer({ storage: storage });
 
-app.post('/upload', upload.single('video'), (req, res) => {
+app.post('/upload_video', upload.single('video'), (req, res) => {
     if (req.file && req.file.path) {
       res.json({ url: req.file.path });
     } else {
