@@ -18,7 +18,32 @@ import searchUser from "../controller/searchUser.js";
 import updateAgency from "../controller/agency/updateAgency.js";
 import getAgency from "../controller/agency/getAgency.js";
 
+import multer from 'multer';
+import { v2 as cloudinary } from 'cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
+
 const router = Router();
+
+cloudinary.config({
+    cloud_name: 'YOUR_CLOUD_NAME',
+    api_key: 'YOUR_API_KEY',
+    api_secret: 'YOUR_API_SECRET',
+  });
+  const storage = new CloudinaryStorage({
+    cloudinary: cloudinary
+  });
+
+
+const upload = multer({ storage: storage });
+
+app.post('/upload', upload.single('image'), (req, res) => {
+    if (req.file && req.file.path) {
+      res.json({ url: req.file.path });
+    } else {
+      res.status(400).json({ error: 'Image upload failed' });
+    }
+  });
+  
 
 //Agency
 router.post("/api/addAgency", createAgency);
