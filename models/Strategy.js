@@ -15,12 +15,13 @@ const strategySchema = new Schema(
     audiences: [{ type: String }],
     deliveryTimeSlots: { type: Object },
     creatives: { type: String },
+    campaignId: { type: String}
   },
   {
     timestamps: true,
   }
 );
 
-const Strategy = model("Strategies", strategySchema);
+const Strategy = model("strategies", strategySchema);
 
 export default Strategy;

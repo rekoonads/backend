@@ -10,9 +10,10 @@ const campaignSchema = new Schema(
     campaignType: { type: String, required: true },
     startDate: { type: String, required: true },
     endDate: { type: String, required: true },
+    
   },
   { timestamps: true }
 );
-const Campaignmodel = model('Campaigns', campaignSchema);
+const Campaignmodel = model('campaigns', campaignSchema);
 
 export default Campaignmodel;
