@@ -17,45 +17,7 @@ import createAdvertiser from "../controller/advertisers/createAdvertiser.js";
 import searchUser from "../controller/searchUser.js";
 import updateAgency from "../controller/agency/updateAgency.js";
 import getAgency from "../controller/agency/getAgency.js";
-
-import multer from 'multer';
-import { v2 as cloudinary } from 'cloudinary';
-import { CloudinaryStorage } from 'multer-storage-cloudinary';
-
 const router = Router();
-
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_SECRET,
-  });
-  const storage = new CloudinaryStorage({
-    cloudinary: cloudinary,
-    params: async (req, file) => {
-        if (file.mimetype.startsWith('video/')) {
-          return {
-            resource_type: 'video'
-          };
-        } else {
-          return {
-            resource_type: 'image'
-          };
-        }
-      },
-  });
-
-
-const upload = multer({ storage: storage });
-
-app.post('/upload_video', upload.single('video'), (req, res) => {
-    if (req.file && req.file.path) {
-      res.json({ url: req.file.path });
-    } else {
-      res.status(400).json({ error: 'Image upload failed' });
-    }
-  });
-  
-
 //Agency
 router.post("/api/addAgency", createAgency);
 router.post("/api/addUser", userCreate);
