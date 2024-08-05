@@ -2,14 +2,18 @@ import { model, Schema } from "mongoose";
 
 const strategySchema = new Schema(
   {
-    strategyId: { type: String, required: true, unique: true },
-    strategyName: { type: String, required: true },
-    strategyDailyBudget: { type: String, required: true },
-    ageRange: { type: String, required: true },
+    userId: {type: String},
+    strategyId: { type: String },
+    strategyName: { type: String},
+    strategyDailyBudget: { type: String},
+    selectedGoal:{ type: String },
+    selectedOption: {type: String},
+    selectedChannels: [{type: String}],
+    ageRange: { type: String},
     gender: { type: String },
-    screens: { type: String, required: true },
-    audiences: [{ type: Schema.Types.ObjectId, ref: "Audiences" }],
-    deliveryTimeSlots: { type: String, required: true },
+    screens: { type: String},
+    audiences: [{ type: String }],
+    deliveryTimeSlots: { type: Object },
     creatives: { type: String },
   },
   {

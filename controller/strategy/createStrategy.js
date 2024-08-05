@@ -6,22 +6,24 @@ export default async (req, res) => {
     strategyId: req.body.strategyId,
     strategyName: req.body.strategyName,
     strategyDailyBudget: req.body.strategyDailyBudget,
+    selectedGoal: req.body.selectedGoal,
+    selectedOption: req.body.selectedOption,
+    selectedChannels: req.body.selectedChannels,
     ageRange: req.body.ageRange,
     gender: req.body.gender,
     screens: req.body.screens,
-    selectedChannels: req.body.selectedChannels,
     audiences: req.body.audiences,
     deliveryTimeSlots: req.body.deliveryTimeSlots,
     creatives: req.body.creatives,
   });
-
+  console.log(`User Sent Data : `, req.body)
   try {
     const savedStrategy = await newStrategy.save();
-    return savedStrategy
-      ? res.status(201).json({
-          savedStrategy,
-        })
-      : res.status(401).json({ message: `Unable to Create` });
+    if(savedStrategy){
+      return res.status(201).json({savedStrategy})
+    } else {
+      return res.status(403).json({message: `Unable to create`})
+    }
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
