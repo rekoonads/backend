@@ -46,7 +46,7 @@ router.post("/verify", async (req, res) => {
 
     // Create ExpectedSign
     const expectedSign = crypto
-      .createHmac("sha256", {}.RAZORPAY_SECRET)
+      .createHmac("sha256", process.env.RAZORPAY_SECRET)
       .update(sign.toString())
       .digest("hex");
 

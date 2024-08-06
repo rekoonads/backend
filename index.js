@@ -9,38 +9,32 @@ import helment from "helmet";
 import compression from "compression";
 import payment from "./routes/payment.js";
 
-import multer from 'multer';
-import pkg2 from 'cloudinary';
+import multer from "multer";
+import pkg2 from "cloudinary";
 const { v2: cloudinary } = pkg2;
-import { CloudinaryStorage } from 'multer-storage-cloudinary';
-
-
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 
 cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_SECRET,
-  });
-  const storage = new CloudinaryStorage({
-    cloudinary: cloudinary,
-    params: async (req, file) => {
-        if (file.mimetype.startsWith('video/')) {
-          return {
-            resource_type: 'video'
-          };
-        } else {
-          return {
-            resource_type: 'image'
-          };
-        }
-      },
-  });
-
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_SECRET,
+});
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: async (req, file) => {
+    if (file.mimetype.startsWith("video/")) {
+      return {
+        resource_type: "video",
+      };
+    } else {
+      return {
+        resource_type: "image",
+      };
+    }
+  },
+});
 
 const upload = multer({ storage: storage });
-
-  
-
 
 const { urlencoded, json } = pkg;
 const PORT = process.env.PORT || 8080;
@@ -79,11 +73,11 @@ app.use(
 app.use("/", apiRouter);
 app.use("/api/payment", payment);
 
-app.post('/upload_video', upload.single('video'), (req, res) => {
+app.post("/upload_video", upload.single("video"), (req, res) => {
   if (req.file && req.file.path) {
     res.json({ url: req.file.path });
   } else {
-    res.status(400).json({ error: 'Image upload failed' });
+    res.status(400).json({ error: "Image upload failed" });
   }
 });
 
