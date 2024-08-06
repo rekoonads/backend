@@ -7,6 +7,7 @@ export default async (req, res) => {
     if(req.body.typeofuser=="agencies"){
         const updateData = {
             agencyName: req.body.agencyName,
+            agencyLogo: req.body.logo,
             gstNumber: req.body.gstNumber,
             legalName: req.body.legalName,
             address: req.body.address,
@@ -26,6 +27,7 @@ export default async (req, res) => {
         const updateData = {
             advertiserName: req.body.advertiserName,
             gstNumber: req.body.gstNumber,
+            advertiserLogo :req.body.logo,
             legalName: req.body.legalName,
             address: req.body.address,
             gstCertificate: req.body.gstCertificate,

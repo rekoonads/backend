@@ -2,6 +2,7 @@ import { model, Schema } from 'mongoose';
 const agencies = new Schema(
   {
     agencyId: { type: String, required: true, unique: true },
+    agencyLogo : {type: String},
     agencyName: { type: String, required: true },
     createdBy : {type: String, require: true},
     gstNumber: { type: String},
