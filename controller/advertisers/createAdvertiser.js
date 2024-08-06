@@ -3,15 +3,12 @@ import {v4 as uuidv4} from 'uuid';
 
 export default async (req, res) => {
   try {
-    const {
-      advertiserName,
-      createdBy
-    } = req.body;
+   
 
     const new_advertiser = new Advertisermodel({
-        advertiserId: `adv_${uuidv4()}`,
-        advertiserName,
-        createdBy
+        advertiserId: req.body.advertiserId,
+        advertiserName: req.body.advertiserName,
+        createdBy: req.body.createdBy
     });
     await Advertisermodel.create(new_advertiser).then((advertiser) => {
         return res.status(201).json(advertiser);

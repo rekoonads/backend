@@ -15,4 +15,5 @@ const agencies = new Schema(
     timestamps: true,
   },
 );
-export const Agencymodel = model('Agencies', agencies);
+export default model('Agencies', agencies);
+ 

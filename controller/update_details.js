@@ -1,5 +1,5 @@
-import Advertisermodel  from "../../models/Advertiser.js";
-import { Agencymodel } from "../models/Agencies.js";
+import Advertisermodel  from "../models/Advertiser.js";
+import  Agencymodel  from "../models/Agencies.js";
 
 export default async (req, res) => {
   try {

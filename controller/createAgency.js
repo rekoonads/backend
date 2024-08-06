@@ -1,4 +1,4 @@
-import { Agencymodel } from '../models/Agencies.js';
+import  Agencymodel  from '../models/Agencies.js';
 import { userModel } from '../models/User.js';
 
 export default async (req, res) => {

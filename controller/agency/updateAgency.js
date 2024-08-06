@@ -1,4 +1,4 @@
-import { Agencymodel } from "../../models/Agencies.js";
+import  Agencymodel  from "../../models/Agencies.js";
 
 export default async (req, res) => {
     const agencyId = req.params.agency_id;

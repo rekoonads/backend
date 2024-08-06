@@ -1,6 +1,6 @@
 import Advertisermodel  from "../models/Advertiser.js";
 import { userModel } from "../models/User.js";
-import { Agencymodel } from "../models/Agencies.js";
+import  Agencymodel  from "../models/Agencies.js";
 
 export default async (req, res) => {
     const userId = req.params.user_id;
