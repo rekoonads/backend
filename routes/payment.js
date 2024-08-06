@@ -2,8 +2,7 @@ import express from "express";
 import Razorpay from "razorpay";
 import crypto from "crypto";
 import "dotenv/config";
-import Payment from "../models/Payment.js";
-// Adjust the import path based on your file structure
+import Payment from "../models/Payment.js"; // Adjust the import path based on your file structure
 
 const router = express.Router();
 
@@ -60,6 +59,7 @@ router.post("/verify", async (req, res) => {
 
       res.json({
         message: "Payment Successfully Verified",
+        payment_id: razorpay_payment_id, // Include the payment ID in the response
       });
     } else {
       res.status(400).json({ message: "Invalid Signature" });
