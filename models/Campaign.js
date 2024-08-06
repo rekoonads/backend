@@ -3,6 +3,8 @@ const campaignSchema = new Schema(
   {
     userId: { type: String, required: true },
     campaignId: { type: String, required: true, unique: true },
+    agencyId: {type: String},
+    advertiserId: {type: String},
     campaignName: { type: String, required: true },
     campaignGoal: { type: String },
     campaignAdvertiserBudget: { type: String, required: true },
