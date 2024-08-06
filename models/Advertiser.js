@@ -1,6 +1,7 @@
 import { model, Schema } from 'mongoose';
 const advertiser = new Schema(
   {
+    
     advertiserId: { type: String },
     advertiserName: { type: String },
     createdBy : {type: String},
