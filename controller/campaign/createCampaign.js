@@ -6,17 +6,17 @@ export default async (req, res) => {
     const campaignData = req.body;
 
     
-    const existingCampaign = await Campaignmodel.findOne({ userId: campaignData.userId });
+    // const existingCampaign = await Campaignmodel.findOne({ userId: campaignData.userId });
     
-    if (existingCampaign) {
+    // if (existingCampaign) {
     
-      return res.status(404).json({ status: false, message: "Campaign already exists" });
-    } else {
+    //   return res.status(404).json({ status: false, message: "Campaign already exists" });
+    // } else {
       
       const campaign = new Campaignmodel(campaignData);
       const savedCampaign = await campaign.save();
       return res.status(201).json(savedCampaign);
-    }
+    // }
   } catch (err) {
     console.error("Error saving campaign:", err);
     return res.status(400).json({ error: err.message });
