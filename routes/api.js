@@ -42,7 +42,6 @@ router
 router.post("/api/strategy", createStrategy);
 
 //Advertisers
-
 router.post("/api/add-advertiser", createAdvertiser);
 router.post("/api/advertisers", advertiserCreation);
 router

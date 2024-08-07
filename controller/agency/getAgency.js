@@ -4,7 +4,7 @@ import  Agencymodel  from "../../models/Agencies.js";
 export default async (req, res) => {
     const agencyId = req.params.agency_id;
     try {
-        const agency = await Agencymodel.findOne({ agencyId: agencyId });
+        const agency = await Agencymodel.findOne({ createdBy: agencyId });
 
         if (!agency) {
             return res.status(404).send('Agency not found');

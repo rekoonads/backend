@@ -14,10 +14,10 @@ export default async (req, res) => {
             type_of_user: user.userType ? 'Agency' : 'Advertiser'
         };
         if (!user.userType) {
-            const advertisers = await Advertisermodel.find({ createdBy: userId });
+            const advertisers = await Advertisermodel.find({ createdBy: userId});
             response.data = advertisers;
         } else {
-            const agencies = await Agencymodel.find({ createdBy: userId });
+            const agencies = await Agencymodel.find({ createdBy: userId }); //this part needs to be changed from createdBy to agencyId
             response.data = agencies;
         }
         return res.send(response);
