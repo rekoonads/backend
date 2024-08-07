@@ -18,6 +18,7 @@ import searchUser from "../controller/searchUser.js";
 import updateAgency from "../controller/agency/updateAgency.js";
 import getAgency from "../controller/agency/getAgency.js";
 import update_details from "../controller/update_details.js";
+import addBIll from "../controller/bill/addBIll.js";
 const router = Router();
 //Agency
 router.post("/api/addAgency", createAgency);
@@ -55,6 +56,9 @@ router.get("/api/search-user/:user_id", searchUser);
 router.post("/api/update-agency/:agency_id", updateAgency);
 router.get("/api/search-agency/:agency_id", getAgency);
 router.post("/api/update_user",update_details)
+
+//Payment 
+router.post("/api/bill", addBIll)
 
 
 export default router;
