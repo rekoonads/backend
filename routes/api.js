@@ -19,6 +19,7 @@ import updateAgency from "../controller/agency/updateAgency.js";
 import getAgency from "../controller/agency/getAgency.js";
 import update_details from "../controller/update_details.js";
 import addBIll from "../controller/bill/addBIll.js";
+import addWebsite from "../controller/addWebsite.js";
 const router = Router();
 //Agency
 router.post("/api/addAgency", createAgency);
@@ -59,6 +60,6 @@ router.post("/api/update_user",update_details)
 
 //Payment 
 router.post("/api/bill", addBIll)
-
+router.post("/api/add-website", addWebsite);
 
 export default router;
