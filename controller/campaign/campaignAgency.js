@@ -2,10 +2,10 @@ import Campaignmodel from "../../models/Campaign.js";
 
 export default async (req, res) => {
   try {
-    const userId = req.params;
-    
+    const agencyId = req.params.agencyId;
+    console.log(agencyId)
 
-    const campaigns = await Campaignmodel.find(userId);
+    const campaigns = await Campaignmodel.find({agencyId: agencyId});
     return campaigns
       ? res.status(200).json(campaigns)
       : res.status(503).json({ message: `No Campaigns Created` });

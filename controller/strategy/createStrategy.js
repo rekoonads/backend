@@ -4,6 +4,7 @@ export default async (req, res) => {
   const newStrategy = new Strategy({
     userId: req.body.userId,
     strategyId: req.body.strategyId,
+    agencyId: req.body.agencyId,
     strategyName: req.body.strategyName,
     strategyDailyBudget: req.body.strategyDailyBudget,
     selectedGoal: req.body.selectedGoal,

@@ -19,6 +19,7 @@ import updateAgency from "../controller/agency/updateAgency.js";
 import getAgency from "../controller/agency/getAgency.js";
 import update_details from "../controller/update_details.js";
 import addBIll from "../controller/bill/addBIll.js";
+import campaignAgency from "../controller/campaign/campaignAgency.js";
 const router = Router();
 //Agency
 router.post("/api/addAgency", createAgency);
@@ -33,6 +34,9 @@ router
   .patch(campaignUpdate)
   .delete(deleteCampaign);
 router.post("/api/campaigns", createCampaign); // It is checked and this is working
+
+router.get("/api/campaigns-agency/:agencyId", campaignAgency)
+
 
 //Strategy
 router

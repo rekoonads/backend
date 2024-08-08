@@ -4,6 +4,7 @@ const strategySchema = new Schema(
   {
     userId: {type: String},
     strategyId: { type: String },
+    agencyId: {type: String},
     strategyName: { type: String},
     strategyDailyBudget: { type: String},
     selectedGoal:{ type: String },
