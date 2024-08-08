@@ -9,7 +9,7 @@ export default async (req, res) => {
             created_by,
             object
         } = req.body.data || {};
-
+       
         if (!id || !name || !created_by || !object) {
             return res.status(400).json({ error: 'Missing required fields' });
         }

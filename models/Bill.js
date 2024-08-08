@@ -6,16 +6,12 @@ const billSchema = new Schema(
   {
     userId: { 
       type: String, 
-      
     },
     campaignId: { 
-      type: Schema.Types.ObjectId, 
-      ref: 'campaigns',  
+      type:String
     },
     strategyId: { 
-      type: Schema.Types.ObjectId, 
-      ref: 'strategies', 
-    
+      type:String
     },
     successPaymentId: { 
       type: String,  

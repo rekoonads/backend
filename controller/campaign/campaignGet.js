@@ -4,7 +4,6 @@ export default async (req, res) => {
   try {
     const userId = req.params;
     
-
     const campaigns = await Campaignmodel.find(userId);
     return campaigns
       ? res.status(200).json(campaigns)

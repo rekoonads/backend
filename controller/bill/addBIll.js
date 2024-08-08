@@ -7,13 +7,13 @@ export default async (req, res) => {
     // Create the bill document
     const newBill = await Bill.create({ userId,campaignId, strategyId, successPaymentId });
 
-    // Populate the references
-    const populatedBill = await Bill.findById(newBill._id)
-      .populate('campaignId')
-      .populate('strategyId');
+    if(newBill){
+      return res.status(201).json(newBill);
+    } else {
+      return res.status(400).json({error: `Error at Request`});
+    }
 
-    // Respond with the populated document
-    return res.status(201).json(populatedBill);
+   
   } catch (error) {
     console.error('Error creating bill:', error);
     return res.status(400).json({ message: error.message });

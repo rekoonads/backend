@@ -21,6 +21,8 @@ import update_details from "../controller/update_details.js";
 import addBIll from "../controller/bill/addBIll.js";
 import addWebsite from "../controller/addWebsite.js";
 import campaignAgency from "../controller/campaign/campaignAgency.js";
+import getStrategyByCampaignId from "../controller/strategy/getStrategyByCampaignId.js";
+import getBill from "../controller/bill/getBill.js";
 const router = Router();
 //Agency
 router.post("/api/addAgency", createAgency);
@@ -34,8 +36,7 @@ router
   .get(campaignGet)
   .patch(campaignUpdate)
   .delete(deleteCampaign);
-router.post("/api/campaigns", createCampaign); // It is checked and this is working
-
+router.post("/api/campaigns", createCampaign); 
 router.get("/api/campaigns-agency/:agencyId", campaignAgency)
 
 
@@ -46,6 +47,12 @@ router
   .patch(updateStrategy)
   .delete(deleteStrategy);
 router.post("/api/strategy", createStrategy);
+
+//getting the strategy by campaignId 
+router.get('/api/strategy-campaign/:campaignId', getStrategyByCampaignId)
+
+
+
 
 //Advertisers
 router.post("/api/add-advertiser", createAdvertiser);
@@ -64,6 +71,7 @@ router.post("/api/update_user",update_details)
 
 //Payment 
 router.post("/api/bill", addBIll)
+router.get('/api/bill/:campaignId', getBill)
 router.post("/api/add-website", addWebsite);
 
 export default router;
