@@ -5,6 +5,7 @@ const website = new Schema(
     agencyId: { type: String},
     createdBy : {type: String},
     websiteUrl : {type: String},
+    websiteName:{type: String},
     websiteEmail: {type: String},
     websiteContact: {type: String}
   },

@@ -85,7 +85,7 @@ async function openPage(
 
         if (title === user_name) {
             found = true;
-            console.log(`Found "Shibu Gope"`);
+            console.log(`Found ${user_name}`);
             aElement.click();
             break;
         }
@@ -209,6 +209,9 @@ async function openPage(
     // await driver.get("https://console.revive-adserver.net/affiliate-zones.php");
     // await driver.findElement(By.css("a.inlineIcon.iconZoneAdd")).click();
     await driver.sleep(1000);
+    // const zone_ele = await driver.findElement(By.id("zonename"));
+    // const zone_name =await zone_ele.getAttribute('value');
+
     await driver.findElement(By.id("delivery-vi")).click();
     await driver.findElement(By.id("submit")).click();
     await driver.sleep(1000);

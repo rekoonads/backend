@@ -7,6 +7,7 @@ export default async (req, res) => {
         advertiserId,
         agencyId,
         createdBy,
+        websiteName,
         websiteUrl,
         websiteEmail,
         websiteContact
