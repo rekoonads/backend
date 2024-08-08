@@ -1,8 +1,8 @@
-import  Websitemodel  from "../models/Website";
+import Websitemodel from "../models/Website.js";
 
 export default async (req, res) => {
     try {
-       const {advertiserId,agencyId,createdBy,websiteContact,websiteUrl,websiteEmail} = req.body||{};
+       const {advertiserId,agencyId,createdBy,websiteUrl,websiteEmail,websiteContact} = req.body||{};
        const newwebsite = new Websitemodel({
         advertiserId,
         agencyId,

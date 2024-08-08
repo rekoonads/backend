@@ -12,4 +12,4 @@ const website = new Schema(
     timestamps: true,
   },
 );
-export const Websitemodel = model('Websites', website);
+export default model('Websites', website);
