@@ -7,7 +7,7 @@ export default async (req, res) => {
     agencyId: req.body.agencyId,
     strategyName: req.body.strategyName,
     strategyDailyBudget: req.body.strategyDailyBudget,
-    selectedGoal: req.body.selectedGoal,
+    selectedGoal: req.body.selectedGoal, 
     selectedOption: req.body.selectedOption,
     selectedChannels: req.body.selectedChannels,
     ageRange: req.body.ageRange,

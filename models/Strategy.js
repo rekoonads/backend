@@ -15,7 +15,7 @@ const strategySchema = new Schema(
     screens: { type: String},
     audiences: [{ type: String }],
     deliveryTimeSlots: { type: Object },
-    creatives: { type: String },
+    creatives: { type: String }, 
     duration:{type: String},
     campaignId: { type: String}
   },
