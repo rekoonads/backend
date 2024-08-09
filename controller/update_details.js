@@ -4,7 +4,7 @@ import  Agencymodel  from "../models/Agencies.js";
 export default async (req, res) => {
   try {
     
-    if(req.body.typeofuser=="agencies"){
+    if(req.body.typeofuser=="Agency"){
         const updateData = {
             agencyName: req.body.agencyName,
             agencyLogo: req.body.logo,

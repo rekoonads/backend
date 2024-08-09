@@ -16,6 +16,7 @@ export default async (req, res) => {
     audiences: req.body.audiences,
     deliveryTimeSlots: req.body.deliveryTimeSlots,
     creatives: req.body.creatives,
+    duration: req.body.duration,
     campaignId: req.body.campaignId
   });
   console.log(`User Sent Data : `, req.body)
