@@ -22,20 +22,7 @@ function getWebsitesByUserId(userId) {
 
 
 const openPage = async (userId,campaignId,strategyId) => {
-  // url,
-  // username,
-  // password,
-  // campaignName,
-  // campaignBudget,
-  // startDate,
-  // endDate,
-  // user_id,
-  // user_name,
-  // user_email,
-  // user_number,
-  // video_url,
-  // video_name,
-  // video_duration
+
 
   const user_data = await userModel.findOne({userId: userId});
   const campaign_data = await Campaignmodel.findOne({campaignId: campaignId});
@@ -52,7 +39,7 @@ const openPage = async (userId,campaignId,strategyId) => {
   const user_email = user_data.email;
   const user_number = user_data.phoneNo||987654321;
   const video_url = streategy_data.creatives;
-  let video_duration =0;
+  let video_duration = streategy_data.duration;
 
   const video_name = user_name+" "+video_url.split('/').pop();
   console.log( campaignName+" "+campaignBudget+" "+startDate+" "+endDate+" "+user_id+" "+user_name+" "+user_email+" "+user_number+"  videoo url  "+video_url+"  video name  "+video_name+" duration "+video_duration);
