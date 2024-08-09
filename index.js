@@ -74,11 +74,24 @@ app.use("/", apiRouter);
 app.use("/api/payment", payment);
 
 app.post("/upload_video", upload.single("video"), (req, res) => {
-  if (req.file && req.file.path) {
-    res.json({ url: req.file.path });
+  if (req.file) {
+    console.log('File uploaded:', req.file);
+    if (req.file.path) {
+      res.json({ url: req.file.path });
+    } else {
+      console.error('File path not available');
+      res.status(400).json({ error: "Image upload failed" });
+    }
   } else {
+    console.error('File upload failed:', req.file);
     res.status(400).json({ error: "Image upload failed" });
   }
+  // if (req.file && req.file.path) {
+  //   res.json({ url: req.file.path });
+  // } else {
+  //   console.error('File upload failed', req.file);
+  //   res.status(400).json({ error: "Image upload failed" });
+  // }
 });
 
 // Save server loader function
