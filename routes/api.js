@@ -52,8 +52,6 @@ router.post("/api/strategy", createStrategy);
 router.get('/api/strategy-campaign/:campaignId', getStrategyByCampaignId)
 
 
-
-
 //Advertisers
 router.post("/api/add-advertiser", createAdvertiser);
 router.post("/api/advertisers", advertiserCreation);
@@ -63,6 +61,7 @@ router
   .patch(updateAdvertisers)
   .delete(deleteAdvertisers);
 
+  
 //Search users
 router.get("/api/search-user/:user_id", searchUser);
 router.post("/api/update-agency/:agency_id", updateAgency);

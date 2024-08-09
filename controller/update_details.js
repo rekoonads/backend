@@ -2,6 +2,7 @@ import Advertisermodel from "../models/Advertiser.js";
 import Agencymodel from "../models/Agencies.js";
 
 export default async (req, res) => {
+  console.log(req.body)
   try {
     if (req.body.typeofuser === "Agency") {
       const updateData = {
@@ -21,9 +22,9 @@ export default async (req, res) => {
         { new: true }
       );
       if (result) {
-        res.status(200).json({ message: "Update successful", data: result });
+        return res.status(200).json({ message: "Update successful", data: result });
       } else {
-        res.status(404).json({ message: "Agency not found" });
+       return res.status(404).json({ message: "Agency not found" });
       }
     } else if(req.body.typeofuser === "Advertiser") {
       const updateData = {
@@ -43,9 +44,9 @@ export default async (req, res) => {
         { new: true }
       );
       if (result) {
-        res.status(200).json({ message: "Update successful", data: result });
+        return res.status(200).json({ message: "Update successful", data: result });
       } else {
-        res.status(404).json({ message: "Advertiser not found" });
+        return res.status(404).json({ message: "Advertiser not found" });
       }
     }
   } catch (error) {
