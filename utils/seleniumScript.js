@@ -5,59 +5,63 @@ import Websitemodel from "../models/Website.js";
 import Campaignmodel from "../models/Campaign.js";
 import Strategy from "../models/Strategy.js";
 import { userModel } from '../models/User.js';
-import edge from 'selenium-webdriver/edge.js';
+import "dotenv/config";
 // import chrome from 'selenium-webdriver/chrome';
 
 function convertDateMode(dateString) {
-  let inputDate = dateString?dateString:new Date();
+  let inputDate = dateString ? dateString : new Date();
   let dateObj = new Date(inputDate);
   let options = { day: "2-digit", month: "long", year: "numeric" };
   let formattedDate = dateObj.toLocaleDateString("en-GB", options);
   return formattedDate;
-} 
+}
+
 function getWebsitesByUserId(userId) {
   return Websitemodel.find({ createdBy: userId }).exec();
 }
 
+const openPage = async (userId, campaignId, strategyId) => {
+  const url = process.env.REVIVE_URL;
+  const username = process.env.REVIVE_USERNAME;
+  const password = process.env.REVIVE_PASSWORD;
+  const user_data = await userModel.findOne({ userId: userId });
+  const campaign_data = await Campaignmodel.findOne({ campaignId: campaignId });
+  const strategy_data = await Strategy.findOne({ strategyId: strategyId });
 
-
-const openPage = async (userId,campaignId,strategyId) => {
-
-
-  const user_data = await userModel.findOne({userId: userId});
-  const campaign_data = await Campaignmodel.findOne({campaignId: campaignId});
-  const streategy_data = await Strategy.findOne({strategyId:strategyId});
   console.log(campaign_data);
   console.log(user_data);
-  console.log(streategy_data);
+  console.log(strategy_data);
+
   const campaignName = campaign_data.campaignName;
   const campaignBudget = campaign_data.campaignBudget;
-  const startDate= campaign_data.startDate;
+  const startDate = campaign_data.startDate;
   const endDate = campaign_data.endDate;
   const user_id = user_data.userId;
-  const user_name = user_data.firstName+" "+user_data.lastName;
+  const user_name = `${user_data.firstName} ${user_data.lastName}`;
   const user_email = user_data.email;
-  const user_number = user_data.phoneNo||987654321;
-  const video_url = streategy_data.creatives;
-  let video_duration = streategy_data.duration;
+  const user_number = user_data.phoneNo || 987654321;
+  const video_url = strategy_data.creatives;
+  const video_duration = strategy_data.duration || '06';
 
-  const video_name = user_name+" "+video_url.split('/').pop();
-  console.log( campaignName+" "+campaignBudget+" "+startDate+" "+endDate+" "+user_id+" "+user_name+" "+user_email+" "+user_number+"  videoo url  "+video_url+"  video name  "+video_name+" duration "+video_duration);
+  const video_name = `${user_name} ${video_url.split('/').pop()}`;
+  console.log(
+    `${campaignName} ${campaignBudget} ${startDate} ${endDate} ${user_id} ${user_name} ${user_email} ${user_number} video URL ${video_url} video name ${video_name} duration ${video_duration}`
+  );
 
   // let options = new chrome.Options();
-  // let driver = await new Builder().forBrowser('MicrosoftEdge').build();
-  
+  let driver = await new Builder().forBrowser('MicrosoftEdge').build();
+
   // options.addArguments('--headless');
   // options.addArguments('--disable-gpu');
   // options.addArguments('--no-sandbox');
-  // options.addArguments('--disabled-dev-shm-usage');
-  
+  // options.addArguments('--disable-dev-shm-usage');
+
   // let driver = await new Builder()
   //   .forBrowser("chrome")
   //   .setChromeOptions(options)
   //   .build();
 
-  /*try {
+  try {
     await driver.get(url);
 
     // Wait for the username input field to be present and enter the username
@@ -184,7 +188,7 @@ const openPage = async (userId,campaignId,strategyId) => {
     await driver.sleep(2000);
 
     // Fill out the form
-    await driver.findElement(By.id("description")).sendKeys(video_name +" banner added");
+    await driver.findElement(By.id("description")).sendKeys(video_name);
 
     await driver
       .findElement(By.id("vast_video_filename"))
@@ -207,10 +211,13 @@ const openPage = async (userId,campaignId,strategyId) => {
 
     await driver.get("https://console.revive-adserver.net//website-index.php");
 
-    const websites = await getWebsitesByUserId(user_id);
+    const website = await getWebsitesByUserId(user_id);
     await driver.sleep(1000);
-    for (const site of websites) {
-      const websiteUrl = site.websiteName;
+    // for (let site of websites) {
+      const websiteUrl = website.websiteName;
+      const websiteContact = website.websiteContact||'0987654321';
+      const websiteEmail = website.websiteEmail;
+      const websitelink = website.websiteUrl;
         const rows = await driver.findElements(By.css('tbody tr'));
         let found_site = false;
         for (let row of rows) {
@@ -224,33 +231,24 @@ const openPage = async (userId,campaignId,strategyId) => {
             break;
           }
         }
-      }
+      // }
 
     if (!found_site) {
+        await driver.findElement(By.css("a.inlineIcon.iconWebsiteAdd")).click();
+        await driver.findElement(By.id("website")).clear();
+        await driver
+          .findElement(By.id("website"))
+          .sendKeys(websiteUrl);
+        await driver.findElement(By.id("name")).sendKeys(websiteUrl);
+        await driver.findElement(By.id("contact")).sendKeys(websiteContact);
+        await driver.findElement(By.id("email")).sendKeys(websiteEmail);
+        await driver.findElement(By.id("save")).click();
 
-      // create website .... 
-
-
-
-
-      // const createNewBtn = await driver.findElement(By.id('create_new'));
-      // await createNewBtn.click();
+        await console.log("Website Created Succesfully");
+        let zone = await driver.wait(until.elementLocated(By.linkText('add a zone')), 10000);
+         await zone.click();
     }
-    await driver.findElement(By.css("a.inlineIcon.iconWebsiteAdd")).click();
-    await driver.findElement(By.id("website")).clear();
-    await driver
-      .findElement(By.id("website"))
-      .sendKeys("http://www.flipkart.com");
-    await driver.findElement(By.id("name")).click();
-    await driver.findElement(By.id("contact")).sendKeys("34453454");
-    await driver.findElement(By.id("email")).sendKeys("shibugghuguv@gmail.com");
-    await driver.findElement(By.id("save")).click();
-
-    await console.log("Website Created Succesfully");
     
-    let zone = await driver.wait(until.elementLocated(By.linkText('add a zone')), 10000);
-
-    await zone.click();
     // await driver.get("https://console.revive-adserver.net/affiliate-zones.php");
     // await driver.findElement(By.css("a.inlineIcon.iconZoneAdd")).click();
     await driver.sleep(1000);
@@ -323,7 +321,7 @@ const openPage = async (userId,campaignId,strategyId) => {
     return textareaValue;
   } finally {
     // await driver.quit();
-  }*/
+  }
 }
 
 export { openPage };
