@@ -6,6 +6,8 @@ import Campaignmodel from "../models/Campaign.js";
 import Strategy from "../models/Strategy.js";
 import { userModel } from '../models/User.js';
 
+import chrome from "selenium-webdriver/chrome.js";
+
 import "dotenv/config";
 // import chrome from 'selenium-webdriver/chrome';
 
@@ -49,18 +51,18 @@ const openPage = async (userId, campaignId, strategyId) => {
     `${campaignName} ${campaignBudget} ${startDate} ${endDate} ${user_id} ${user_name} ${user_email} ${user_number} video URL ${video_url} video name ${video_name} duration ${video_duration}`
   );
 
-  // let options = new chrome.Options();
-  let driver = await new Builder().forBrowser('MicrosoftEdge').build();
+  let options = new chrome.Options();
+  // let driver = await new Builder().forBrowser('MicrosoftEdge').build();
 
-  // options.addArguments('--headless');
-  // options.addArguments('--disable-gpu');
-  // options.addArguments('--no-sandbox');
-  // options.addArguments('--disable-dev-shm-usage');
+  options.addArguments('--headless');
+  options.addArguments('--disable-gpu');
+  options.addArguments('--no-sandbox');
+  options.addArguments('--disable-dev-shm-usage');
 
-  // let driver = await new Builder()
-  //   .forBrowser("chrome")
-  //   .setChromeOptions(options)
-  //   .build();
+  let driver = await new Builder()
+    .forBrowser("chrome")
+    .setChromeOptions(options)
+    .build();
 
   try {
     await driver.get(url);
@@ -160,7 +162,7 @@ const openPage = async (userId, campaignId, strategyId) => {
     await driver.findElement(By.id("weight")).sendKeys("100");
 
     // Click the submit button
-    // await driver.findElement(By.id("submit")).click();
+    await driver.findElement(By.id("submit")).click();
 
     await console.log("Campaign Created Succesfully");
     try {
@@ -206,7 +208,7 @@ const openPage = async (userId, campaignId, strategyId) => {
       .sendKeys(video_url);
 
     // Submit the form
-    // await driver.findElement(By.id("submit")).click();
+    await driver.findElement(By.id("submit")).click();
     await console.log("Banner Created Succesfully");
 
     await driver.get("https://console.revive-adserver.net//website-index.php");
