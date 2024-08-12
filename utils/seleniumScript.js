@@ -5,6 +5,7 @@ import Websitemodel from "../models/Website.js";
 import Campaignmodel from "../models/Campaign.js";
 import Strategy from "../models/Strategy.js";
 import { userModel } from '../models/User.js';
+
 import "dotenv/config";
 // import chrome from 'selenium-webdriver/chrome';
 
@@ -159,26 +160,25 @@ const openPage = async (userId, campaignId, strategyId) => {
     await driver.findElement(By.id("weight")).sendKeys("100");
 
     // Click the submit button
-    await driver.findElement(By.id("submit")).click();
+    // await driver.findElement(By.id("submit")).click();
 
     await console.log("Campaign Created Succesfully");
-    let linkElement = await driver.wait(until.elementLocated(By.linkText('add a banner')), 10000);
+    try {
+       let linkElement = await driver.wait(until.elementLocated(By.linkText('add a banner')), 10000);
+       await linkElement.click();
+    } catch (error) {
+      await driver.get(
+      "https://console.revive-adserver.net/campaign-banners.php");
+       await driver.sleep(2000);
+      await driver.findElement(By.css("a.inlineIcon.iconBannerAdd")).click();
 
-    await linkElement.click();
+      // Wait for the new page to load
+     
+    }
+   
+    await driver.sleep(1000);
+
     
-    // await driver.get(
-    //   "https://console.revive-adserver.net/campaign-banners.php"
-    // );
-    await driver.sleep(2000);
-
-    // // Click on the anchor tag to add a new banner
-    // await driver.get(
-    //   "https://console.revive-adserver.net/advertiser-campaigns.php"
-    // );
-    // await driver.findElement(By.css("a.inlineIcon.iconBannerAdd")).click();
-
-    // // Wait for the new page to load
-    // await driver.sleep(1000);
 
     // Select "Inline Video Ad (pre/mid/post-roll)" from the dropdown
     let selectElement = await driver.findElement(By.name("type"));
@@ -206,40 +206,52 @@ const openPage = async (userId, campaignId, strategyId) => {
       .sendKeys(video_url);
 
     // Submit the form
-    await driver.findElement(By.id("submit")).click();
+    // await driver.findElement(By.id("submit")).click();
     await console.log("Banner Created Succesfully");
 
     await driver.get("https://console.revive-adserver.net//website-index.php");
 
     const website = await getWebsitesByUserId(user_id);
+    console.log(website);
     await driver.sleep(1000);
     // for (let site of websites) {
-      const websiteUrl = website.websiteName;
-      const websiteContact = website.websiteContact||'0987654321';
-      const websiteEmail = website.websiteEmail;
-      const websitelink = website.websiteUrl;
-        const rows = await driver.findElements(By.css('tbody tr'));
+      const websiteName = website[0].websiteName;
+      const websiteContact = website[0].websiteContact||'0987654321';
+      const websiteEmail = website[0].websiteEmail;
+      const websitelink = website[0].websiteUrl;
+      console.log(websiteName + " url "+websiteContact+" contact "+websiteEmail+" email"+websitelink);
+      const rows = await driver.findElements(By.css('tbody tr'));
         let found_site = false;
         for (let row of rows) {
-          const linkElement = await row.findElement(By.css('td:nth-child(2) a'));
-          const linkUrl = await linkElement.getText();
-
-          if (linkUrl === websiteUrl) {
-            found_site = true;
-            const addNewZoneLink = await row.findElement(By.css('.iconZoneAdd'));
-            await addNewZoneLink.click();
-            break;
+          try {
+              // Wait for the link element to be present
+              const linkElement = await row.findElement(By.css('a.inlineIcon.iconWebsite'));
+              await driver.wait(until.elementIsVisible(linkElement), 5000);
+      
+              const linkUrl = await linkElement.getText();
+      
+              if (linkUrl === websiteName) {
+                  found_site = true;
+                  const addNewZoneLink = await row.findElement(By.css('a.inlineIcon.iconZoneAdd'));
+                  await driver.wait(until.elementIsVisible(addNewZoneLink), 5000);
+                  await addNewZoneLink.click();
+                  console.log(`Clicked 'Add new zone' for ${websiteUrl}`);
+                  break;
+              }
+          } catch (error) {
+              console.log(`Error processing row: ${error.message}`);
           }
-        }
-      // }
+      }
+    // }
+   
 
     if (!found_site) {
         await driver.findElement(By.css("a.inlineIcon.iconWebsiteAdd")).click();
-        await driver.findElement(By.id("website")).clear();
-        await driver
+        await driver.findElement(By.id("name")).sendKeys(websiteName);
+        await driver 
           .findElement(By.id("website"))
-          .sendKeys(websiteUrl);
-        await driver.findElement(By.id("name")).sendKeys(websiteUrl);
+          .sendKeys(websitelink);
+        
         await driver.findElement(By.id("contact")).sendKeys(websiteContact);
         await driver.findElement(By.id("email")).sendKeys(websiteEmail);
         await driver.findElement(By.id("save")).click();
