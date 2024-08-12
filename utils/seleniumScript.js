@@ -160,7 +160,7 @@ const openPage = async (userId, campaignId, strategyId) => {
     await driver.findElement(By.id("weight")).sendKeys("100");
 
     // Click the submit button
-    // await driver.findElement(By.id("submit")).click();
+    await driver.findElement(By.id("submit")).click();
 
     await console.log("Campaign Created Succesfully");
     try {
@@ -206,7 +206,7 @@ const openPage = async (userId, campaignId, strategyId) => {
       .sendKeys(video_url);
 
     // Submit the form
-    // await driver.findElement(By.id("submit")).click();
+    await driver.findElement(By.id("submit")).click();
     await console.log("Banner Created Succesfully");
 
     await driver.get("https://console.revive-adserver.net//website-index.php");
