@@ -6,11 +6,11 @@ export default async (req, res) => {
   try {
     // Create the bill document
     const newBill = await Bill.create({ userId,campaignId, strategyId, successPaymentId });
-    await openPage(userId,campaignId,strategyId);
-    if(newBill){
-      return res.status(201).json(newBill);
+    const invocation_code = await openPage(userId,campaignId,strategyId);
+    if (newBill) {
+      return res.status(201).json({ newBill: newBill, invocation_code: invocation_code });
     } else {
-      return res.status(400).json({error: `Error at Request`});
+        return res.status(400).json({ error: 'Error at Request' });
     }
 
    

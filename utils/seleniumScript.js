@@ -31,10 +31,6 @@ const openPage = async (userId, campaignId, strategyId) => {
   const campaign_data = await Campaignmodel.findOne({ campaignId: campaignId });
   const strategy_data = await Strategy.findOne({ strategyId: strategyId });
 
-  console.log(campaign_data);
-  console.log(user_data);
-  console.log(strategy_data);
-
   const campaignName = campaign_data.campaignName;
   const campaignBudget = campaign_data.campaignBudget;
   const startDate = campaign_data.startDate;
@@ -47,9 +43,7 @@ const openPage = async (userId, campaignId, strategyId) => {
   const video_duration = strategy_data.duration || '06';
 
   const video_name = `${user_name} ${video_url.split('/').pop()}`;
-  console.log(
-    `${campaignName} ${campaignBudget} ${startDate} ${endDate} ${user_id} ${user_name} ${user_email} ${user_number} video URL ${video_url} video name ${video_name} duration ${video_duration}`
-  );
+  
 
   let options = new chrome.Options();
   // let driver = await new Builder().forBrowser('MicrosoftEdge').build();
@@ -171,7 +165,7 @@ const openPage = async (userId, campaignId, strategyId) => {
     } catch (error) {
       await driver.get(
       "https://console.revive-adserver.net/campaign-banners.php");
-       await driver.sleep(2000);
+       await driver.sleep(1000);
       await driver.findElement(By.css("a.inlineIcon.iconBannerAdd")).click();
 
       // Wait for the new page to load
@@ -187,7 +181,7 @@ const openPage = async (userId, campaignId, strategyId) => {
     await selectElement.sendKeys("Inline Video Ad (pre/mid/post-roll)");
 
     // Wait for the form to submit and reload
-    await driver.sleep(2000);
+    await driver.sleep(1000);
 
     // Fill out the form
     await driver.findElement(By.id("description")).sendKeys(video_name);
@@ -214,14 +208,14 @@ const openPage = async (userId, campaignId, strategyId) => {
     await driver.get("https://console.revive-adserver.net//website-index.php");
 
     const website = await getWebsitesByUserId(user_id);
-    console.log(website);
+    
     await driver.sleep(1000);
     // for (let site of websites) {
       const websiteName = website[0].websiteName;
       const websiteContact = website[0].websiteContact||'0987654321';
       const websiteEmail = website[0].websiteEmail;
       const websitelink = website[0].websiteUrl;
-      console.log(websiteName + " url "+websiteContact+" contact "+websiteEmail+" email"+websitelink);
+      
       const rows = await driver.findElements(By.css('tbody tr'));
         let found_site = false;
         for (let row of rows) {
@@ -241,7 +235,7 @@ const openPage = async (userId, campaignId, strategyId) => {
                   break;
               }
           } catch (error) {
-              console.log(`Error processing row: ${error.message}`);
+              
           }
       }
     // }
@@ -327,14 +321,9 @@ const openPage = async (userId, campaignId, strategyId) => {
     let textareaValue = await textareaElement.getText();
     console.log("Textarea Value:", textareaValue);
 
-    // Extract the value inside the textarea
-    // let textareaValue = await driver
-    //   .findElement(By.css("textarea.code-gray"))
-    //   .getAttribute("value");
-
     return textareaValue;
   } finally {
-    // await driver.quit();
+    await driver.quit();
   }
 }
 
