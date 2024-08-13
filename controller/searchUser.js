@@ -11,7 +11,8 @@ export default async (req, res) => {
             return res.status(404).send('User not found');
         }
         let response = {
-            type_of_user: user.userType ? 'Agency' : 'Advertiser'
+            type_of_user: user.userType ? 'Agency' : 'Advertiser',
+            user: user
         };
         if (!user.userType) {
             const advertisers = await Advertisermodel.find({ createdBy: userId});
