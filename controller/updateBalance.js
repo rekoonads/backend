@@ -1,4 +1,4 @@
-import { userModel } from "../models/User";
+import { userModel } from "../models/User.js";
 export default async (req, res) => {
   const {userId, addedBalance} = req.body;
   try {
