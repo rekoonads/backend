@@ -14,6 +14,7 @@ export default async (req, res) => {
             firstName: first_name,
             lastName: last_name,
             userType: "",
+            walletBalance: 0,
             email: email_addresses[0].email_address,
             phoneNo: ""
         });
