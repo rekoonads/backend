@@ -24,6 +24,7 @@ import campaignAgency from "../controller/campaign/campaignAgency.js";
 import getStrategyByCampaignId from "../controller/strategy/getStrategyByCampaignId.js";
 import getBill from "../controller/bill/getBill.js";
 import uploadFile from "../controller/cloudinery/uploadFile.js";
+import updateBalance from "../controller/updateBalance.js";
 const router = Router();
 //Agency
 router.post("/api/addAgency", createAgency);
@@ -76,5 +77,6 @@ router.post("/api/add-website", addWebsite);
 
 //Cloudinery File Uploads
 router.post('/api/file-cloud', uploadFile)
+router.post('/api/update-balance', updateBalance)
 
 export default router;
