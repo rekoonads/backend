@@ -6,7 +6,7 @@ export default async (req, res) => {
     const userId = req.params.user_id;
     try {
         const user = await userModel.findOne({ userId: userId });
-
+        console.log(user);
         if (!user) {
             return res.status(404).send('User not found');
         }
