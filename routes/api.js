@@ -77,6 +77,6 @@ router.post("/api/add-website", addWebsite);
 
 //Cloudinery File Uploads
 router.post('/api/file-cloud', uploadFile)
-router.post('/api/update-balance', updateBalance)
+router.patch('/api/update-balance', updateBalance)
 
 export default router;
