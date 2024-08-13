@@ -9,12 +9,12 @@ export default async (req, res) => {
     }
 
     const newBalance = user.walletBalance + addedBalance;
-
-    
     user.walletBalance = newBalance;
     await user.save();
-
-    return { success: true, data: user };
+    const updateuser =  await userModel.findOne({ userId: userId });
+    console.log(updateuser);
+    const update_user = await userModel.findOne({ userId: userId });
+    return {  message: "Payment Successfully Verified", data: update_user };
   } catch (error) {
     return res.status(401).json({ error: error });
   }
