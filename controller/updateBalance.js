@@ -12,9 +12,7 @@ export default async (req, res) => {
     user.walletBalance = newBalance;
     await user.save();
     const updateuser =  await userModel.findOne({ userId: userId });
-    console.log(updateuser);
-    const update_user = await userModel.findOne({ userId: userId });
-    return {  message: "Payment Successfully Verified", data: update_user };
+    return {  message: "Payment Successfully Verified", data: updateuser };
   } catch (error) {
     return res.status(401).json({ error: error });
   }

@@ -142,7 +142,7 @@ const openPage = async (userId, campaignId, strategyId) => {
         // Handle error if necessary
       }
     }
-
+ 
     if (!found_site) {
       await driver.findElement(By.css("a.inlineIcon.iconWebsiteAdd")).click();
       await driver.findElement(By.id("name")).sendKeys(websites[0].websiteName);
