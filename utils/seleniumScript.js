@@ -1,9 +1,9 @@
 import { Builder, By, until } from "selenium-webdriver";
-import { Select } from 'selenium-webdriver/lib/select.js';
+import { Select } from "selenium-webdriver/lib/select.js";
 import Websitemodel from "../models/Website.js";
 import Campaignmodel from "../models/Campaign.js";
 import Strategy from "../models/Strategy.js";
-import { userModel } from '../models/User.js';
+import { userModel } from "../models/User.js";
 
 import chrome from "selenium-webdriver/chrome.js";
 
@@ -14,6 +14,7 @@ function convertDateMode(dateString) {
   let dateObj = new Date(inputDate);
   let options = { day: "2-digit", month: "long", year: "numeric" };
   let formattedDate = dateObj.toLocaleDateString("en-GB", options);
+  console.log(formattedDate)
   return formattedDate;
 }
 
@@ -37,11 +38,11 @@ const openPage = async (userId, campaignId, strategyId) => {
   const user_email = user_data.email;
   const user_number = user_data.phoneNo || 987654321;
   const video_url = strategy_data.creatives;
-  const video_duration = strategy_data.duration || '06';
-  const video_name = `${user_name} ${video_url.split('/').pop()}`;
+  const video_duration = strategy_data.duration || "06";
+  const video_name = `${user_name} ${video_url.split("/").pop()}`;
 
   let options = new chrome.Options();
-  options.addArguments('--headless', '--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage');
+   options.addArguments('--headless', '--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage');
 
   let driver = await new Builder()
     .forBrowser("chrome")
@@ -52,24 +53,37 @@ const openPage = async (userId, campaignId, strategyId) => {
     await driver.get(url);
 
     // Login
-    await driver.wait(until.elementLocated(By.name("username")), 10000).sendKeys(username);
-    await driver.wait(until.elementLocated(By.name("password")), 10000).sendKeys(password);
+    await driver
+      .wait(until.elementLocated(By.name("username")), 10000)
+      .sendKeys(username);
+    await driver
+      .wait(until.elementLocated(By.name("password")), 10000)
+      .sendKeys(password);
     await driver.wait(until.elementLocated(By.id("login")), 10000).click();
     console.log("Login Successfully");
 
     // Navigate to advertiser campaigns page
-    await driver.get("https://console.revive-adserver.net/advertiser-campaigns.php");
+    await driver.get(
+      "https://console.revive-adserver.net/advertiser-campaigns.php"
+    );
 
     let found = false;
     try {
-      let spanElement = await driver.findElement(By.css('span ul li.inlineIcon.iconAdvertiser'));
+      let spanElement = await driver.findElement(
+        By.css("span ul li.inlineIcon.iconAdvertiser")
+      );
       await spanElement.click();
-      let activeUl = await driver.wait(until.elementLocated(By.css('ul.active')), 10000);
-      let liElements = await activeUl.findElements(By.css('li'));
-      
+      let activeUl = await driver.wait(
+        until.elementLocated(By.css("ul.active")),
+        10000
+      );
+      let liElements = await activeUl.findElements(By.css("li"));
+
       for (let li of liElements) {
-        let aElement = await li.findElement(By.css('a.inlineIcon.iconAdvertiser'));
-        let title = await aElement.getAttribute('title');
+        let aElement = await li.findElement(
+          By.css("a.inlineIcon.iconAdvertiser")
+        );
+        let title = await aElement.getAttribute("title");
         if (title === user_name) {
           found = true;
           console.log(`Found ${user_name}`);
@@ -82,23 +96,31 @@ const openPage = async (userId, campaignId, strategyId) => {
     }
 
     if (!found) {
-      await driver.get("https://console.revive-adserver.net/advertiser-edit.php");
+      await driver.get(
+        "https://console.revive-adserver.net/advertiser-edit.php"
+      );
       await driver.findElement(By.id("clientname")).sendKeys(user_name);
       await driver.findElement(By.id("contact")).sendKeys(user_number);
       await driver.findElement(By.id("email")).sendKeys(user_email);
       await driver.findElement(By.id("submit")).click();
       console.log("Advertiser created Successfully");
 
-      await driver.wait(until.elementLocated(By.linkText('add a campaign')), 10000).click();
+      await driver
+        .wait(until.elementLocated(By.linkText("add a campaign")), 10000)
+        .click();
+        await driver.sleep(1000)
     } else {
       await driver.findElement(By.css("a.inlineIcon.iconCampaignAdd")).click();
+      await driver.sleep(1000)
     }
 
     // Create campaign
     await driver.findElement(By.id("campaignname")).sendKeys(campaignName);
     await driver.findElement(By.id("priority-e")).click();
     await driver.findElement(By.id("startSet_specific")).click();
-    await driver.findElement(By.id("start")).sendKeys(convertDateMode(startDate));
+    await driver
+      .findElement(By.id("start"))
+      .sendKeys(convertDateMode(startDate));
     await driver.findElement(By.id("endSet_specific")).click();
     await driver.findElement(By.id("end")).sendKeys(convertDateMode(endDate));
     await driver.findElement(By.id("revenue")).sendKeys(campaignBudget || 100);
@@ -107,19 +129,29 @@ const openPage = async (userId, campaignId, strategyId) => {
     console.log("Campaign Created Successfully");
 
     try {
-      await driver.wait(until.elementLocated(By.linkText('add a banner')), 10000).click();
+      await driver
+        .wait(until.elementLocated(By.linkText("add a banner")), 10000)
+        .click();
     } catch (error) {
-      await driver.get("https://console.revive-adserver.net/campaign-banners.php");
+      await driver.get(
+        "https://console.revive-adserver.net/campaign-banners.php"
+      );
       await driver.findElement(By.css("a.inlineIcon.iconBannerAdd")).click();
     }
 
     // Create banner
-    await driver.findElement(By.name("type")).sendKeys("Inline Video Ad (pre/mid/post-roll)");
+    await driver
+      .findElement(By.name("type"))
+      .sendKeys("Inline Video Ad (pre/mid/post-roll)");
     await driver.findElement(By.id("description")).sendKeys(video_name);
     await driver.findElement(By.id("vast_video_filename")).sendKeys(video_url);
     await driver.findElement(By.id("vast_video_type")).sendKeys("MP4");
-    await driver.findElement(By.id("vast_video_duration")).sendKeys(video_duration);
-    await driver.findElement(By.id("vast_video_clickthrough_url")).sendKeys(video_url);
+    await driver
+      .findElement(By.id("vast_video_duration"))
+      .sendKeys(video_duration);
+    await driver
+      .findElement(By.id("vast_video_clickthrough_url"))
+      .sendKeys(video_url);
     await driver.findElement(By.id("submit")).click();
     console.log("Banner Created Successfully");
 
@@ -127,14 +159,16 @@ const openPage = async (userId, campaignId, strategyId) => {
     const websites = await getWebsitesByUserId(user_data.userId);
 
     let found_site = false;
-    const rows = await driver.findElements(By.css('tbody tr'));
+    const rows = await driver.findElements(By.css("tbody tr"));
     for (let row of rows) {
       try {
-        const linkElement = await row.findElement(By.css('a.inlineIcon.iconWebsite'));
+        const linkElement = await row.findElement(
+          By.css("a.inlineIcon.iconWebsite")
+        );
         const linkUrl = await linkElement.getText();
         if (linkUrl === websites[0].websiteName) {
           found_site = true;
-          await row.findElement(By.css('a.inlineIcon.iconZoneAdd')).click();
+          await row.findElement(By.css("a.inlineIcon.iconZoneAdd")).click();
           console.log(`Clicked 'Add new zone' for ${websites[0].websiteUrl}`);
           break;
         }
@@ -142,34 +176,46 @@ const openPage = async (userId, campaignId, strategyId) => {
         // Handle error if necessary
       }
     }
- 
+
     if (!found_site) {
       await driver.findElement(By.css("a.inlineIcon.iconWebsiteAdd")).click();
       await driver.findElement(By.id("name")).sendKeys(websites[0].websiteName);
-      await driver.findElement(By.id("website")).sendKeys(websites[0].websiteUrl);
-      await driver.findElement(By.id("contact")).sendKeys(websites[0].websiteContact || '0987654321');
-      await driver.findElement(By.id("email")).sendKeys(websites[0].websiteEmail);
+      await driver
+        .findElement(By.id("website"))
+        .sendKeys(websites[0].websiteUrl);
+      await driver
+        .findElement(By.id("contact"))
+        .sendKeys(websites[0].websiteContact || "0987654321");
+      await driver
+        .findElement(By.id("email"))
+        .sendKeys(websites[0].websiteEmail);
       await driver.findElement(By.id("save")).click();
       console.log("Website Created Successfully");
-      await driver.wait(until.elementLocated(By.linkText('add a zone')), 10000).click();
+      await driver
+        .wait(until.elementLocated(By.linkText("add a zone")), 10000)
+        .click();
     }
 
     await driver.findElement(By.id("delivery-vi")).click();
     await driver.findElement(By.id("submit")).click();
     console.log("Zone Created Successfully");
 
-    const elements = await driver.findElements(By.css("a.inlineIcon.iconZoneLinked"));
+    const elements = await driver.findElements(
+      By.css("a.inlineIcon.iconZoneLinked")
+    );
     if (elements.length > 0) {
       await elements[elements.length - 1].click();
     }
 
-    const dropdownElement = await driver.findElement(By.name('clientid'));
+    const dropdownElement = await driver.findElement(By.name("clientid"));
     const select = new Select(dropdownElement);
     await select.selectByVisibleText(user_name);
     await driver.sleep(2000);
 
     const campaignidSelect = await driver.findElement(By.name("campaignid"));
-    const campaignidOptions = await campaignidSelect.findElements(By.tagName("option"));
+    const campaignidOptions = await campaignidSelect.findElements(
+      By.tagName("option")
+    );
     if (campaignidOptions.length > 0) {
       await campaignidOptions[campaignidOptions.length - 1].click();
     }
@@ -177,7 +223,10 @@ const openPage = async (userId, campaignId, strategyId) => {
     await driver.findElement(By.id("link_submit")).click();
     await driver.findElement(By.linkText("VAST2 Invocation Code")).click();
 
-    const textareaElement = await driver.wait(until.elementLocated(By.css("textarea.code-gray")), 10000);
+    const textareaElement = await driver.wait(
+      until.elementLocated(By.css("textarea.code-gray")),
+      10000
+    );
     const textareaValue = await textareaElement.getText();
     console.log("Textarea Value:", textareaValue);
 
