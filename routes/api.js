@@ -25,6 +25,9 @@ import getStrategyByCampaignId from "../controller/strategy/getStrategyByCampaig
 import getBill from "../controller/bill/getBill.js";
 import uploadFile from "../controller/cloudinery/uploadFile.js";
 import updateBalance from "../controller/updateBalance.js";
+import vmap from '../controller/vmap.js'
+
+
 const router = Router();
 //Agency
 router.post("/api/addAgency", createAgency);
@@ -78,5 +81,8 @@ router.post("/api/add-website", addWebsite);
 //Cloudinery File Uploads
 router.post('/api/file-cloud', uploadFile)
 router.patch('/api/update-balance', updateBalance)
+
+//vmap 
+router.get('/api/vmap', vmap)
 
 export default router;
