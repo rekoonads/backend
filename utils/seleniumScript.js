@@ -40,6 +40,10 @@ const openPage = async (userId, campaignId, strategyId) => {
   const video_url = strategy_data.creatives;
   const video_duration = strategy_data.duration || "06";
   const video_name = `${user_name} ${video_url.split("/").pop()}`;
+  const websites = await getWebsitesByUserId(user_data.userId);
+  if (!websites || websites.length === 0) {
+    throw new Error("Please add a website.");
+  }
 
   let options = new chrome.Options();
    options.addArguments('--headless', '--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage');
@@ -99,6 +103,7 @@ const openPage = async (userId, campaignId, strategyId) => {
       await driver.get(
         "https://console.revive-adserver.net/advertiser-edit.php"
       );
+      await driver.findElement(By.id("clientname")).clear(); 
       await driver.findElement(By.id("clientname")).sendKeys(user_name);
       await driver.findElement(By.id("contact")).sendKeys(user_number);
       await driver.findElement(By.id("email")).sendKeys(user_email);
@@ -156,8 +161,7 @@ const openPage = async (userId, campaignId, strategyId) => {
     console.log("Banner Created Successfully");
 
     await driver.get("https://console.revive-adserver.net/website-index.php");
-    const websites = await getWebsitesByUserId(user_data.userId);
-
+    
     let found_site = false;
     const rows = await driver.findElements(By.css("tbody tr"));
     for (let row of rows) {
