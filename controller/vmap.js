@@ -1,4 +1,4 @@
-import Ad from "./AdbidModel.js";
+import Ad from "../models/AdbidModel.js";
 
 const generateVAST = (ad) => {
   return `
