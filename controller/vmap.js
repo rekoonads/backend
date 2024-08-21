@@ -2,16 +2,31 @@ import Ad from "../models/AdbidModel.js";
 
 const generateVAST = (ad) => {
   return `
-    <VAST version="4.3">
+    <VAST version="2.0">
       <Ad id="${ad.id}">
         <InLine>
-          <AdSystem>Ad Server</AdSystem>
+          <AdSystem>AdGlare Ad Server</AdSystem>
           <AdTitle>${ad.advertiser}</AdTitle>
+          <Impression id="${ad.id}">
+            <![CDATA[${ad.impressionUrl}]]>
+          </Impression>
           <Creatives>
-            <Creative>
+            <Creative id="${ad.creativeId}">
               <Linear>
+                <Duration>${ad.duration}</Duration>
+                <TrackingEvents/>
+                <VideoClicks>
+                  <ClickThrough>
+                    <![CDATA[${ad.clickThroughUrl}]]>
+                  </ClickThrough>
+                  <ClickTracking>
+                    <![CDATA[${ad.clickTrackingUrl}]]>
+                  </ClickTracking>
+                </VideoClicks>
                 <MediaFiles>
-                  <MediaFile><![CDATA[${ad.creativeUrl}]]></MediaFile>
+                  <MediaFile width="${ad.width}" height="${ad.height}" delivery="progressive" type="video/mp4" bitrate="${ad.bitrate}" scalable="true" maintainAspectRatio="true">
+                    <![CDATA[${ad.creativeUrl}]]>
+                  </MediaFile>
                 </MediaFiles>
               </Linear>
             </Creative>
@@ -19,7 +34,7 @@ const generateVAST = (ad) => {
         </InLine>
       </Ad>
     </VAST>
-    `;
+  `;
 };
 
 const generateVMAP = (ads) => {
@@ -47,7 +62,7 @@ const generateVMAP = (ads) => {
         </AdSource>
       </AdBreak>
     </VMAP>
-    `;
+  `;
 };
 
 export default async (req, res) => {
@@ -59,3 +74,4 @@ export default async (req, res) => {
     return res.status(500).json(error);
   }
 };
+
