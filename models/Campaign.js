@@ -8,9 +8,6 @@ const campaignSchema = new Schema(
     campaignName: { type: String, required: true },
     campaignGoal: { type: String },
     website: {
-      advertiserId: { type: String },
-      agencyId: { type: String},
-      createdBy : {type: String},
       websiteUrl : {type: String},
       websiteName:{type: String},
       websiteEmail: {type: String},
