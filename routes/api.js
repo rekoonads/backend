@@ -28,6 +28,7 @@ import updateBalance from "../controller/updateBalance.js";
 import vmap from '../controller/vmap.js'
 import addBidder from "../controller/addBidder.js";
 import getBidderDetails from "../controller/getBidderDetails.js";
+import getAdd from "../controller/getAdd.js";
 
 
 const router = Router();
@@ -85,6 +86,7 @@ router.post('/api/file-cloud', uploadFile)
 router.patch('/api/update-balance', updateBalance)
 router.post('/api/add-bidder',addBidder);
 router.get('/api/get-bidder-details', getBidderDetails)
+router.get('/api/get-add',getAdd)
 
 //vmap 
 router.get('/api/vmap', vmap)
