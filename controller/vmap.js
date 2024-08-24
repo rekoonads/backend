@@ -4,7 +4,7 @@ const generateVAST = (ad) => {
   return `
     <VAST version="2.0">
       <Ad id="${ad.id}">
-        <InLine>
+        <InLine skipoffset="00:00:05">
           <AdSystem>AdGlare Ad Server</AdSystem>
           <AdTitle>${ad.advertiser}</AdTitle>
           <Impression id="${ad.id}">

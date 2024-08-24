@@ -26,6 +26,8 @@ import getBill from "../controller/bill/getBill.js";
 import uploadFile from "../controller/cloudinery/uploadFile.js";
 import updateBalance from "../controller/updateBalance.js";
 import vmap from '../controller/vmap.js'
+import addBidder from "../controller/addBidder.js";
+import getBidderDetails from "../controller/getBidderDetails.js";
 
 
 const router = Router();
@@ -81,7 +83,8 @@ router.post("/api/add-website", addWebsite);
 //Cloudinery File Uploads
 router.post('/api/file-cloud', uploadFile)
 router.patch('/api/update-balance', updateBalance)
-
+router.post('/api/add-bidder',addBidder);
+router.get('/api/get-bidder-details', getBidderDetails)
 //vmap 
 router.get('/api/vmap', vmap)
 
