@@ -40,8 +40,9 @@ const openPage = async (userId, campaignId, strategyId) => {
   const video_url = strategy_data.creatives;
   const video_duration = strategy_data.duration || "06";
   const video_name = `${user_name} ${video_url.split("/").pop()}`;
-  const websites = await getWebsitesByUserId(user_data.userId);
-  if (!websites || websites.length === 0) {
+  console.log(campaign_data?.website?.websiteUrl)
+  const websites = campaign_data?.website;
+  if (!websites || Object.keys(websites).length === 0) {
     throw new Error("Please add a website.");
   }
 
@@ -175,10 +176,10 @@ const openPage = async (userId, campaignId, strategyId) => {
           By.css("a.inlineIcon.iconWebsite")
         );
         const linkUrl = await linkElement.getText();
-        if (linkUrl === websites[0].websiteName) {
+        if (linkUrl === websites?.websiteName) {
           found_site = true;
           await row.findElement(By.css("a.inlineIcon.iconZoneAdd")).click();
-          console.log(`Clicked 'Add new zone' for ${websites[0].websiteUrl}`);
+          console.log(`Clicked 'Add new zone' for ${websites?.websiteUrl}`);
           break;
         }
       } catch (error) {
@@ -188,16 +189,16 @@ const openPage = async (userId, campaignId, strategyId) => {
 
     if (!found_site) {
       await driver.findElement(By.css("a.inlineIcon.iconWebsiteAdd")).click();
-      await driver.findElement(By.id("name")).sendKeys(websites[0].websiteName);
+      await driver.findElement(By.id("name")).sendKeys(websites?.websiteName);
       await driver
         .findElement(By.id("website"))
-        .sendKeys(websites[0].websiteUrl);
+        .sendKeys(websites?.websiteUrl);
       await driver
         .findElement(By.id("contact"))
-        .sendKeys(websites[0].websiteContact || "0987654321");
+        .sendKeys(websites?.websiteContact || "0987654321");
       await driver
         .findElement(By.id("email"))
-        .sendKeys(websites[0].websiteEmail);
+        .sendKeys(websites?.websiteEmail);
       await driver.findElement(By.id("save")).click();
       console.log("Website Created Successfully");
       await driver
