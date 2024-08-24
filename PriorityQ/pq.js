@@ -62,8 +62,8 @@ export class PriorityQ {
   }
 }
 
-const pq = new PriorityQ();
-pq.enqueue(100, 2, 'www.google.com');
-pq.enqueue(200, 1, 'www.flipkart.com');
-pq.dequeue();
-pq.print();
+// const pq = new PriorityQ();
+// pq.enqueue(100, 2, 'www.google.com');
+// pq.enqueue(200, 1, 'www.flipkart.com');
+// pq.dequeue();
+// pq.print();

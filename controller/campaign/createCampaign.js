@@ -7,7 +7,6 @@ export default async (req, res) => {
       const campaign = new Campaignmodel(campaignData);
       const savedCampaign = await campaign.save();
       return res.status(201).json(savedCampaign);
-    
   } catch (err) {
     console.error("Error saving campaign:", err);
     return res.status(400).json({ error: err.message });

@@ -14,7 +14,7 @@ function convertDateMode(dateString) {
   let dateObj = new Date(inputDate);
   let options = { day: "2-digit", month: "long", year: "numeric" };
   let formattedDate = dateObj.toLocaleDateString("en-GB", options);
-  console.log(formattedDate)
+  console.log(formattedDate);
   return formattedDate;
 }
 
@@ -46,7 +46,12 @@ const openPage = async (userId, campaignId, strategyId) => {
   }
 
   let options = new chrome.Options();
-   options.addArguments('--headless', '--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage');
+  options.addArguments(
+    "--headless",
+    "--disable-gpu",
+    "--no-sandbox",
+    "--disable-dev-shm-usage"
+  );
 
   let driver = await new Builder()
     .forBrowser("chrome")
@@ -103,7 +108,7 @@ const openPage = async (userId, campaignId, strategyId) => {
       await driver.get(
         "https://console.revive-adserver.net/advertiser-edit.php"
       );
-      await driver.findElement(By.id("clientname")).clear(); 
+      await driver.findElement(By.id("clientname")).clear();
       await driver.findElement(By.id("clientname")).sendKeys(user_name);
       await driver.findElement(By.id("contact")).sendKeys(user_number);
       await driver.findElement(By.id("email")).sendKeys(user_email);
@@ -113,10 +118,10 @@ const openPage = async (userId, campaignId, strategyId) => {
       await driver
         .wait(until.elementLocated(By.linkText("add a campaign")), 10000)
         .click();
-        await driver.sleep(1000)
+      await driver.sleep(1000);
     } else {
       await driver.findElement(By.css("a.inlineIcon.iconCampaignAdd")).click();
-      await driver.sleep(1000)
+      await driver.sleep(1000);
     }
 
     // Create campaign
@@ -161,7 +166,7 @@ const openPage = async (userId, campaignId, strategyId) => {
     console.log("Banner Created Successfully");
 
     await driver.get("https://console.revive-adserver.net/website-index.php");
-    
+
     let found_site = false;
     const rows = await driver.findElements(By.css("tbody tr"));
     for (let row of rows) {
@@ -235,6 +240,8 @@ const openPage = async (userId, campaignId, strategyId) => {
     console.log("Textarea Value:", textareaValue);
 
     return textareaValue;
+  } catch (error) {
+    return error;
   } finally {
     await driver.quit();
   }

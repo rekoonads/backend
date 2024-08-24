@@ -19,7 +19,8 @@ const bidderSchema = new Schema(
     },
     reviveUrl : {
         type: String,
-    }
+    },
+    audiences: [{ type: String }],
   },
   {
     timestamps: true,

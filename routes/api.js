@@ -85,7 +85,10 @@ router.post('/api/file-cloud', uploadFile)
 router.patch('/api/update-balance', updateBalance)
 router.post('/api/add-bidder',addBidder);
 router.get('/api/get-bidder-details', getBidderDetails)
+
 //vmap 
 router.get('/api/vmap', vmap)
+
+
 
 export default router;

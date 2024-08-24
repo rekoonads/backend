@@ -8,6 +8,7 @@ export default async (req, res) => {
       deliveryTimeSlots,
       campaignBudget,
       reviveUrl,
+      audiences,
     } = req.body;
     console.log(req.body);
 
@@ -17,6 +18,7 @@ export default async (req, res) => {
       deliveryTimeSlots,
       campaignBudget,
       reviveUrl,
+      audiences,
     });
     const savedbidder = await newBidder.save();
     console.log(savedbidder);
