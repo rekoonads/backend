@@ -225,7 +225,7 @@ const openPage = async (userId, campaignId, strategyId) => {
 
     const campaignidSelect = await driver.findElement(By.name("campaignid"));
 
-    const optionToSelect = await campaignidSelect.findElement(By.xpath(`//option[contains(text(),'${campaignName}')]`));
+    const optionToSelect = await campaignidSelect.findElement(By.xpath(`//option[contains(text(),'${campaignName} ')]`));
 
     await optionToSelect.click();
     // const campaignidOptions = await campaignidSelect.findElements(
