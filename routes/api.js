@@ -86,7 +86,7 @@ router.post('/api/file-cloud', uploadFile)
 router.patch('/api/update-balance', updateBalance)
 router.post('/api/add-bidder',addBidder);
 router.get('/api/get-bidder-details', getBidderDetails)
-router.get('/api/get-add',getAdd)
+router.get('/api/get-ads',getAdd)
 
 //vmap 
 router.get('/api/vmap', vmap)
