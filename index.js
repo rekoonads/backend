@@ -5,10 +5,9 @@ import cors from "cors";
 import "dotenv/config";
 import pkg from "body-parser";
 import apiRouter from "./routes/api.js";
-import helment from "helmet";
+import helmet from "helmet";
 import compression from "compression";
 import payment from "./routes/payment.js";
-
 import multer from "multer";
 import pkg2 from "cloudinary";
 const { v2: cloudinary } = pkg2;
@@ -35,41 +34,26 @@ const storage = new CloudinaryStorage({
 });
 
 const upload = multer({ storage: storage });
-
 const { urlencoded, json } = pkg;
 const PORT = process.env.PORT || 8080;
-
-// const storage = multer.memoryStorage();
-// const upload = multer({ storage });
 
 const app = express();
 
 app.use(urlencoded({ extended: false }));
 app.use(json());
 app.use(cookieParser());
-app.use(helment());
+app.use(helmet());
 app.use(compression());
-
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:5173");
-  res.header("Access-Control-Allow-Origin", "https://rekoon-ads.vercel.app");
-  res.header(
-    "Access-Control-Allow-Origin",
-    "https://api.cashfree.com/verification/gstin"
-  );
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT,PATCH,DELETE");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  next();
-});
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://rekoon-ads.vercel.app"],
+    origin: ["http://localhost:5173", "https://rekoon-ads.vercel.app", "http://localhost:3000"],
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
+    credentials: true,  // Allow credentials
   })
 );
 
-//Routing
+// Routing
 app.use("/", apiRouter);
 app.use("/api/payment", payment);
 
@@ -86,12 +70,6 @@ app.post("/upload_video", upload.single("video"), (req, res) => {
     console.error('File upload failed:', req.file);
     res.status(400).json({ error: "Image upload failed" });
   }
-  // if (req.file && req.file.path) {
-  //   res.json({ url: req.file.path });
-  // } else {
-  //   console.error('File upload failed', req.file);
-  //   res.status(400).json({ error: "Image upload failed" });
-  // }
 });
 
 // Save server loader function

@@ -13,7 +13,7 @@ class AudiencePriorityQueues {
   async fetchAndEnqueue(audience) {
     try {
       const advertisers = await Bidder.find({ audiences: audience });
-      console.log(advertisers)
+      // console.log(advertisers)
 
       if (advertisers.length > 0) {
         if (!this.queues[audience]) {
@@ -36,6 +36,7 @@ class AudiencePriorityQueues {
 
     if (this.queues[audience] && !this.queues[audience].isEmpty()) {
       const topAdvertiser = this.queues[audience].dequeue();
+      console.log("adds called by vasturl:-  "+topAdvertiser.reviveUrl)
       return topAdvertiser.reviveUrl;
     } else {
       console.log(`No advertisers found for audience: ${audience}`);
