@@ -10,6 +10,7 @@ export default async (req, res) => {
       const topAdvertiser = await AudiencePriorityQueues.getTopAdvertiserByAudience(contentType);
   
       if (topAdvertiser) {
+        console.log(topAdvertiser);
         res.json(topAdvertiser);
       } else {
         res.status(404).json({ message: `No ads found for content type: ${contentType}` });

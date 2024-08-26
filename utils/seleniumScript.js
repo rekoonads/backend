@@ -126,6 +126,7 @@ const openPage = async (userId, campaignId, strategyId) => {
     }
 
     // Create campaign
+    await driver.findElement(By.id("campaignname")).clear();
     await driver.findElement(By.id("campaignname")).sendKeys(campaignName);
     await driver.findElement(By.id("priority-e")).click();
     await driver.findElement(By.id("startSet_specific")).click();
@@ -223,12 +224,16 @@ const openPage = async (userId, campaignId, strategyId) => {
     await driver.sleep(2000);
 
     const campaignidSelect = await driver.findElement(By.name("campaignid"));
-    const campaignidOptions = await campaignidSelect.findElements(
-      By.tagName("option")
-    );
-    if (campaignidOptions.length > 0) {
-      await campaignidOptions[campaignidOptions.length - 1].click();
-    }
+
+    const optionToSelect = await campaignidSelect.findElement(By.xpath(`//option[contains(text(),'${campaignName}')]`));
+
+    await optionToSelect.click();
+    // const campaignidOptions = await campaignidSelect.findElements(
+    //   By.tagName("option")
+    // );
+    // if (campaignidOptions.length > 0) {
+    //   await campaignidOptions[campaignidOptions.length - 1].click();
+    // }
 
     await driver.findElement(By.id("link_submit")).click();
     await driver.findElement(By.linkText("VAST2 Invocation Code")).click();
