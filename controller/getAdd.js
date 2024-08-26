@@ -1,4 +1,4 @@
-import AudiencePriorityQueues from '../PriorityQ/udiencePriorityQueues.js';
+import AudiencePriorityQueues from '../PriorityQ/audiencePriorityQueues.js';
 export default async (req, res) => {
     const contentType = req.query.type;
   

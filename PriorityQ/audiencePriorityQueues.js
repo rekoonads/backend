@@ -35,7 +35,8 @@ class AudiencePriorityQueues {
     }
 
     if (this.queues[audience] && !this.queues[audience].isEmpty()) {
-      return this.queues[audience].dequeue();
+      const topAdvertiser = this.queues[audience].dequeue();
+      return topAdvertiser.reviveUrl;
     } else {
       console.log(`No advertisers found for audience: ${audience}`);
       return null;
