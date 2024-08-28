@@ -47,7 +47,7 @@ app.use(compression());
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://rekoon-ads.vercel.app", "http://localhost:3000"],
+    origin: '*',
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
     credentials: true,  // Allow credentials
   })

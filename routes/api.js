@@ -29,6 +29,7 @@ import vmap from '../controller/vmap.js'
 import addBidder from "../controller/addBidder.js";
 import getBidderDetails from "../controller/getBidderDetails.js";
 import getAdd from "../controller/getAdd.js";
+import getVideo from "../controller/getVideo.js";
 
 
 const router = Router();
@@ -87,6 +88,7 @@ router.patch('/api/update-balance', updateBalance)
 router.post('/api/add-bidder',addBidder);
 router.get('/api/get-bidder-details', getBidderDetails)
 router.get('/api/get-ads',getAdd)
+router.get('/api/get-video',getVideo)
 
 //vmap 
 router.get('/api/vmap', vmap)
