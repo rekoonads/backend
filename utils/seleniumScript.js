@@ -185,7 +185,7 @@ const openPage = async (userId, campaignId, strategyId) => {
           break;
         }
       } catch (error) {
-        // Handle error if necessary
+        return "error";
       }
     }
 
