@@ -1,4 +1,4 @@
-import ErrorModel from "../models/ErrorModel";
+import ErrorModel from "../models/ErrorModel.js";
 
 export default async (req, res) => {
   try {

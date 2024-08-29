@@ -185,7 +185,10 @@ const openPage = async (userId, campaignId, strategyId) => {
           break;
         }
       } catch (error) {
-        return "error";
+        return {
+          status: 'error',
+          message: error.message,
+        };
       }
     }
 
@@ -246,9 +249,15 @@ const openPage = async (userId, campaignId, strategyId) => {
     const textareaValue = await textareaElement.getText();
     console.log("Textarea Value:", textareaValue);
 
-    return textareaValue;
+    return {
+      status: 'success',
+      value: textareaValue,
+    };
   } catch (error) {
-    return "error";
+    return {
+      status: 'error',
+      message: error.message,
+    };
   } finally {
     await driver.quit();
   }
