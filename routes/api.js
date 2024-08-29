@@ -30,6 +30,7 @@ import addBidder from "../controller/addBidder.js";
 import getBidderDetails from "../controller/getBidderDetails.js";
 import getAdd from "../controller/getAdd.js";
 import getVideo from "../controller/getVideo.js";
+import saveError from "../controller/saveError.js";
 
 
 const router = Router();
@@ -89,6 +90,7 @@ router.post('/api/add-bidder',addBidder);
 router.get('/api/get-bidder-details', getBidderDetails)
 router.get('/api/get-ads',getAdd)
 router.get('/api/get-video',getVideo)
+router.post('/api/save-error',saveError)
 
 //vmap 
 router.get('/api/vmap', vmap)

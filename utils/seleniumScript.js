@@ -42,9 +42,9 @@ const openPage = async (userId, campaignId, strategyId) => {
   const video_name = `${user_name} ${video_url.split("/").pop()}`;
   console.log(campaign_data?.website?.websiteUrl)
   const websites = campaign_data?.website;
-  if (!websites || Object.keys(websites).length === 0) {
-    throw new Error("Please add a website.");
-  }
+  // if (!websites || Object.keys(websites).length === 0) {
+  //   throw new Error("Please add a website.");
+  // }
 
   let options = new chrome.Options();
   options.addArguments(
@@ -70,7 +70,8 @@ const openPage = async (userId, campaignId, strategyId) => {
       .wait(until.elementLocated(By.name("password")), 10000)
       .sendKeys(password);
     await driver.wait(until.elementLocated(By.id("login")), 10000).click();
-    console.log("Login Successfully");
+    console.log("Login Successfully"); 
+
 
     // Navigate to advertiser campaigns page
     await driver.get(
@@ -247,7 +248,7 @@ const openPage = async (userId, campaignId, strategyId) => {
 
     return textareaValue;
   } catch (error) {
-    return error;
+    return "error";
   } finally {
     await driver.quit();
   }
