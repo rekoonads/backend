@@ -31,6 +31,7 @@ import getBidderDetails from "../controller/getBidderDetails.js";
 import getAdd from "../controller/getAdd.js";
 import getVideo from "../controller/getVideo.js";
 import saveError from "../controller/saveError.js";
+import searchCampaign from "../controller/campaign/searchCampaign.js";
 
 
 const router = Router();
@@ -91,6 +92,7 @@ router.get('/api/get-bidder-details', getBidderDetails)
 router.get('/api/get-ads',getAdd)
 router.get('/api/get-video',getVideo)
 router.post('/api/save-error',saveError)
+router.get('/api/get-campaign',searchCampaign)
 
 //vmap 
 router.get('/api/vmap', vmap)
