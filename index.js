@@ -12,6 +12,8 @@ import multer from "multer";
 import pkg2 from "cloudinary";
 const { v2: cloudinary } = pkg2;
 import { CloudinaryStorage } from "multer-storage-cloudinary";
+import cron from "node-cron";
+import Bidder from "./models/bidder.js";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
@@ -32,6 +34,30 @@ const storage = new CloudinaryStorage({
     }
   },
 });
+function formatDateToCustomString(date) {
+  const options = { weekday: 'short', month: 'short', day: '2-digit', year: 'numeric' };
+  return date.toLocaleDateString('en-US', options);
+} 
+const updateStatus = async () => {
+  try {
+    const currentDate = new Date();
+    const formattedCurrentDate = formatDateToCustomString(currentDate);
+    const result = await Bidder.updateMany(
+      { endDate: { $lt: formattedCurrentDate } },
+      { $set: { status: 'Inactive' } }
+    );
+
+    console.log(`${result.modifiedCount} documents were updated to inactive.`);
+  } catch (err) {
+    console.error('Error updating documents:', err);
+  }
+};
+
+
+updateStatus();
+
+
+cron.schedule('0 0 * * *', updateStatus);
 
 const upload = multer({ storage: storage });
 const { urlencoded, json } = pkg;

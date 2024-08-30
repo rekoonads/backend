@@ -9,8 +9,11 @@ export default async (req, res) => {
       campaignBudget,
       reviveUrl,
       audiences,
+      startDate,
+      endDate,
+      status
     } = req.body;
-    console.log(req.body);
+   
 
     const newBidder = new Bidder({
       agencyId,
@@ -19,6 +22,9 @@ export default async (req, res) => {
       campaignBudget,
       reviveUrl,
       audiences,
+      startDate,
+      endDate,
+      status
     });
     const savedbidder = await newBidder.save();
     console.log(savedbidder);

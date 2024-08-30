@@ -20,6 +20,11 @@ const bidderSchema = new Schema(
     reviveUrl : {
         type: String,
     },
+    startDate: { type: String, required: true },
+    endDate: { type: String, required: true },
+    status :{
+         type: String,
+    },
     audiences: [{ type: String }],
   },
   {
