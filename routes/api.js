@@ -32,6 +32,7 @@ import getAdd from "../controller/getAdd.js";
 import getVideo from "../controller/getVideo.js";
 import saveError from "../controller/saveError.js";
 import searchCampaign from "../controller/campaign/searchCampaign.js";
+import searchStrategy from "../controller/strategy/searchStrategy.js";
 
 
 const router = Router();
@@ -94,6 +95,7 @@ router.get('/api/get-video',getVideo)
 router.post('/api/save-error',saveError)
 router.get('/api/get-campaign',searchCampaign)
 
+router.get('/api/get-strategy',searchStrategy)
 //vmap 
 router.get('/api/vmap', vmap)
 
