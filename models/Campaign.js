@@ -17,7 +17,6 @@ const campaignSchema = new Schema(
     campaignAdvertiserBudget: { type: String, required: true },
     campaignBudget: { type: String, required: true },
     campaignType: { type: String, required: true },
-    deliveryType: { type: String, required: true },
     startDate: { type: String, required: true },
     endDate: { type: String, required: true },
     
