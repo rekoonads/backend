@@ -29,25 +29,11 @@ export default async (req, res) => {
     let strategy = await Strategy.findOne({ strategyId });
 
     if (strategy) {
-      strategy.userId = userId;
-      strategy.agencyId = agencyId;
-      strategy.strategyName = strategyName;
-      strategy.strategyDailyBudget = strategyDailyBudget;
-      strategy.selectedGoal = selectedGoal;
-      strategy.selectedOption = selectedOption;
-      strategy.selectedChannels = selectedChannels;
-      strategy.ageRange = ageRange;
-      strategy.gender = gender;
-      strategy.screens = screens;
-      strategy.audiences = audiences;
-      strategy.deliveryTimeSlots = deliveryTimeSlots;
-      strategy.audienceLocation = audienceLocation;
-      strategy.deliveryType = deliveryType;
-      strategy.creatives = creatives;
-      strategy.duration = duration;
-      strategy.campaignId = campaignId;
-
-      const updatedStrategy = await strategy.save();
+      const updatedStrategy = await Strategy.findOneAndUpdate(
+        { strategyId },
+        { $set: req.body },
+        { new: true } 
+      );
       return res.status(200).json({ updatedStrategy });
     } else {
       const newStrategy = new Strategy({
@@ -70,7 +56,7 @@ export default async (req, res) => {
         duration,
         campaignId
       });
-
+      console.log("new strategy data :- ",newStrategy)
       const savedStrategy = await newStrategy.save();
       return res.status(201).json({ savedStrategy });
     }
