@@ -41,7 +41,8 @@ function formatDateToCustomString(date) {
 const updateStatus = async () => {
   try {
     const currentDate = new Date();
-    const formattedCurrentDate = formatDateToCustomString(currentDate);
+    const formattedCurrentDate = currentDate.toISOString().split('T')[0]; // Format current date to 'YYYY-MM-DD'
+    
     const result = await Bidder.updateMany(
       { endDate: { $lt: formattedCurrentDate } },
       { $set: { status: 'Inactive' } }
