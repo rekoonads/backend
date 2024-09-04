@@ -177,31 +177,32 @@ const openPage = async (userId, campaignId, strategyId) => {
     console.log("website opened")
     let found_site = false;
     const rows = await driver.wait(until.elementsLocated(By.css(".tableWrapper tbody tr")), 10000);
-    console.log("row finding",rows);
-    for (let row of rows) {
-      try {
-        console.log("finding website ...");
-        // Wait until the row is visible
-        await driver.wait(until.elementIsVisible(row), 10000);
-    
-        const linkElement = await row.findElement(By.css("a.inlineIcon.iconWebsite"));
-        const linkUrl = await linkElement.getText();
-        console.log("finding website ...",linkUrl);
-    
-        if (linkUrl === websites?.websiteName) {
-          found_site = true;
-          await row.findElement(By.css("a.inlineIcon.iconZoneAdd")).click();
-          console.log(`Clicked 'Add new zone' for ${websites?.websiteUrl}`);
-          break;
+        console.log("row finding",rows);
+      for (let row of rows) {
+        try {
+          console.log("finding website ...");
+          // Wait until the row is visible
+          await driver.wait(until.elementIsVisible(row), 10000);
+      
+          const linkElement = await row.findElement(By.css("a.inlineIcon.iconWebsite"));
+          const linkUrl = await linkElement.getText();
+          console.log("finding website ...",linkUrl);
+      
+          if (linkUrl === websites?.websiteName) {
+            found_site = true;
+            await row.findElement(By.css("a.inlineIcon.iconZoneAdd")).click();
+            console.log(`Clicked 'Add new zone' for ${websites?.websiteUrl}`);
+            break;
+          }
+        } catch (error) {
+          console.log("erroe",error);
+          return {
+            status: 'error',
+            message: error.message,
+          };
         }
-      } catch (error) {
-        console.log("erroe",error);
-        return {
-          status: 'error',
-          message: error.message,
-        };
-      }
     }
+    
     
 
     if (!found_site) {
