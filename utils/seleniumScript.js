@@ -34,7 +34,7 @@ const openPage = async (userId, campaignId, strategyId) => {
   const campaignBudget = campaign_data.campaignBudget;
   const startDate = campaign_data.startDate;
   const endDate = campaign_data.endDate;
-  const user_name = `${user_data.firstName} ${user_data.lastName}`;
+  const user_name = `${user_data.firstName} ${user_data.lastName} ${user_data.email}`;
   const user_email = user_data.email;
   const user_number = user_data.phoneNo || 987654321;
   const video_url = strategy_data.creatives;
@@ -131,11 +131,15 @@ const openPage = async (userId, campaignId, strategyId) => {
     await driver.findElement(By.id("campaignname")).sendKeys(campaignName);
     await driver.findElement(By.id("priority-e")).click();
     await driver.findElement(By.id("startSet_specific")).click();
-    await driver
-      .findElement(By.id("start"))
-      .sendKeys(convertDateMode(startDate));
+    const start_date = await convertDateMode(startDate);
+    const end_date = await convertDateMode(endDate);
+    driver.sleep(1000);
+    // await driver.findElement(By.id("start")).sendKeys(start_date);
+    const startElement = await driver.findElement(By.id("start"));
+    await driver.wait(until.elementIsVisible(startElement), 10000);
+    await startElement.sendKeys(start_date);
     await driver.findElement(By.id("endSet_specific")).click();
-    await driver.findElement(By.id("end")).sendKeys(convertDateMode(endDate));
+    await driver.findElement(By.id("end")).sendKeys(end_date);
     await driver.findElement(By.id("revenue")).sendKeys(campaignBudget || 100);
     await driver.findElement(By.id("weight")).sendKeys("100");
     await driver.findElement(By.id("submit")).click();
@@ -168,16 +172,22 @@ const openPage = async (userId, campaignId, strategyId) => {
     await driver.findElement(By.id("submit")).click();
     console.log("Banner Created Successfully");
 
+    
     await driver.get("https://console.revive-adserver.net/website-index.php");
-
+    console.log("website opened")
     let found_site = false;
-    const rows = await driver.findElements(By.css("tbody tr"));
+    const rows = await driver.wait(until.elementsLocated(By.css(".tableWrapper tbody tr")), 10000);
+    console.log("row finding",rows);
     for (let row of rows) {
       try {
-        const linkElement = await row.findElement(
-          By.css("a.inlineIcon.iconWebsite")
-        );
+        console.log("finding website ...");
+        // Wait until the row is visible
+        await driver.wait(until.elementIsVisible(row), 10000);
+    
+        const linkElement = await row.findElement(By.css("a.inlineIcon.iconWebsite"));
         const linkUrl = await linkElement.getText();
+        console.log("finding website ...",linkUrl);
+    
         if (linkUrl === websites?.websiteName) {
           found_site = true;
           await row.findElement(By.css("a.inlineIcon.iconZoneAdd")).click();
@@ -185,12 +195,14 @@ const openPage = async (userId, campaignId, strategyId) => {
           break;
         }
       } catch (error) {
+        console.log("erroe",error);
         return {
           status: 'error',
           message: error.message,
         };
       }
     }
+    
 
     if (!found_site) {
       await driver.findElement(By.css("a.inlineIcon.iconWebsiteAdd")).click();
@@ -214,7 +226,7 @@ const openPage = async (userId, campaignId, strategyId) => {
     await driver.findElement(By.id("delivery-vi")).click();
     await driver.findElement(By.id("submit")).click();
     console.log("Zone Created Successfully");
-
+  
     const elements = await driver.findElements(
       By.css("a.inlineIcon.iconZoneLinked")
     );
@@ -254,10 +266,12 @@ const openPage = async (userId, campaignId, strategyId) => {
       value: textareaValue,
     };
   } catch (error) {
+    console.log("error",error);
     return {
       status: 'error',
       message: error.message,
     };
+    
   } finally {
     await driver.quit();
   }
