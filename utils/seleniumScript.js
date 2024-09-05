@@ -138,8 +138,6 @@ const openPage = async (userId, campaignId, strategyId) => {
               if (campaignText === campaignName) {
                 campaign_found = true;
                 console.log(`Found campaign: ${campaignText}`);
-
-                
                 const addBannerLink = await row.findElement(By.css('a.inlineIcon.iconBanners'));
                 await addBannerLink.click();
 
@@ -173,9 +171,9 @@ const openPage = async (userId, campaignId, strategyId) => {
       await driver.findElement(By.id("startSet_specific")).click();
       const start_date = await convertDateMode(startDate);
       const end_date = await convertDateMode(endDate);
-      driver.sleep(1000);
+      driver.sleep(2000);
       // await driver.findElement(By.id("start")).sendKeys(start_date);
-      const startElement = await driver.findElement(By.id("start"));
+      const startElement = await driver.wait(until.elementLocated(By.id("start")),20000);
       await driver.wait(until.elementIsVisible(startElement), 10000);
       await startElement.sendKeys(start_date);
       await driver.findElement(By.id("endSet_specific")).click();
