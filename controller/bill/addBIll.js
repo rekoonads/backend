@@ -6,7 +6,12 @@ export default async (req, res) => {
   try {
     // Create the bill document
     const newBill = await Bill.create({ userId,campaignId, strategyId, successPaymentId });
-    const invocation_code = await openPage(userId,campaignId,strategyId);
+    let invocation_code = await openPage(userId,campaignId,strategyId);
+    let count =0;
+    while(invocation_code.status=="error" && count<3){
+      invocation_code = await openPage(userId,campaignId,strategyId);
+      count++;
+    }
     if (newBill) {
       return res.status(201).json({ newBill: newBill, invocation_code: invocation_code });
     } else {
