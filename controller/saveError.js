@@ -10,6 +10,7 @@ export default async (req, res) => {
       campaignId,
       strategyId,
       errorMessage,
+      status,
     });
     await newError.save();
 

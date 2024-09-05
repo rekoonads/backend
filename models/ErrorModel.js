@@ -20,7 +20,11 @@ const errorSchema = new mongoose.Schema({
   errorMessage: {
     type: String,
     required: true,
-  }
+  },
+  status:{
+    type: String,
+    required: true,
+  },
 },{ timestamps: true });
 
 const ErrorModel = mongoose.model('Error', errorSchema);

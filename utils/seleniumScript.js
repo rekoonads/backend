@@ -105,6 +105,8 @@ const openPage = async (userId, campaignId, strategyId) => {
     } catch (error) {
       console.log(`Error finding advertiser: ${error}`);
     }
+    let banner = false;
+    let campaign_found = false;
 
     if (!found) {
       await driver.get(
@@ -122,57 +124,84 @@ const openPage = async (userId, campaignId, strategyId) => {
         .click();
       await driver.sleep(1000);
     } else {
+      await driver.wait(until.elementLocated(By.tagName('.tableWrapper table tbody')), 10000);
+        const rows = await driver.findElements(By.css('tbody tr'));
+
+        for (let row of rows) {
+          const campaignElement = await row.findElement(By.css('td a.inlineIcon.iconCampaign'));
+          const campaignText = await campaignElement.getText();
+          if (campaignText === campaignName) {
+            campaign_found = true;
+            console.log(`Found campaign: ${campaignText}`);
+
+            
+            const addBannerLink = await row.findElement(By.css('a.inlineIcon.iconBanners'));
+            await addBannerLink.click();
+
+            await driver.wait(until.elementLocated(By.css('.tableWrapper > tbody > tr')), 5000);
+            const noBannerMessage = await driver.findElements(By.css('.tableMessage'));
+
+                if (noBannerMessage.length > 0) {
+                  banner = true;
+                }else{
+                  const addBannerLink = await row.findElement(By.css('a.inlineIcon.iconBannerAdd'));
+                }
+
+            console.log('Clicked "Add new banner".');
+            break; 
+          }
+        }
       await driver.findElement(By.css("a.inlineIcon.iconCampaignAdd")).click();
       await driver.sleep(1000);
     }
-
-    // Create campaign
-    await driver.findElement(By.id("campaignname")).clear();
-    await driver.findElement(By.id("campaignname")).sendKeys(campaignName);
-    await driver.findElement(By.id("priority-e")).click();
-    await driver.findElement(By.id("startSet_specific")).click();
-    const start_date = await convertDateMode(startDate);
-    const end_date = await convertDateMode(endDate);
-    driver.sleep(1000);
-    // await driver.findElement(By.id("start")).sendKeys(start_date);
-    const startElement = await driver.findElement(By.id("start"));
-    await driver.wait(until.elementIsVisible(startElement), 10000);
-    await startElement.sendKeys(start_date);
-    await driver.findElement(By.id("endSet_specific")).click();
-    await driver.findElement(By.id("end")).sendKeys(end_date);
-    await driver.findElement(By.id("revenue")).sendKeys(campaignBudget || 100);
-    await driver.findElement(By.id("weight")).sendKeys("100");
-    await driver.findElement(By.id("submit")).click();
-    console.log("Campaign Created Successfully");
-
-    try {
-      await driver
-        .wait(until.elementLocated(By.linkText("add a banner")), 10000)
-        .click();
-    } catch (error) {
-      await driver.get(
-        "https://console.revive-adserver.net/campaign-banners.php"
-      );
-      await driver.findElement(By.css("a.inlineIcon.iconBannerAdd")).click();
+    if(!campaign_found){
+      await driver.findElement(By.id("campaignname")).clear();
+      await driver.findElement(By.id("campaignname")).sendKeys(campaignName);
+      await driver.findElement(By.id("priority-e")).click();
+      await driver.findElement(By.id("startSet_specific")).click();
+      const start_date = await convertDateMode(startDate);
+      const end_date = await convertDateMode(endDate);
+      driver.sleep(1000);
+      // await driver.findElement(By.id("start")).sendKeys(start_date);
+      const startElement = await driver.findElement(By.id("start"));
+      await driver.wait(until.elementIsVisible(startElement), 10000);
+      await startElement.sendKeys(start_date);
+      await driver.findElement(By.id("endSet_specific")).click();
+      await driver.findElement(By.id("end")).sendKeys(end_date);
+      await driver.findElement(By.id("revenue")).sendKeys(campaignBudget || 100);
+      await driver.findElement(By.id("weight")).sendKeys("100");
+      await driver.findElement(By.id("submit")).click();
+      console.log("Campaign Created Successfully");
+       try {
+            await driver
+              .wait(until.elementLocated(By.linkText("add a banner")), 10000)
+              .click();
+          } catch (error) {
+            await driver.get(
+              "https://console.revive-adserver.net/campaign-banners.php"
+            );
+            await driver.findElement(By.css("a.inlineIcon.iconBannerAdd")).click();
+          }
     }
 
     // Create banner
-    await driver
-      .findElement(By.name("type"))
-      .sendKeys("Inline Video Ad (pre/mid/post-roll)");
-    await driver.findElement(By.id("description")).sendKeys(video_name);
-    await driver.findElement(By.id("vast_video_filename")).sendKeys(video_url);
-    await driver.findElement(By.id("vast_video_type")).sendKeys("MP4");
-    await driver
-      .findElement(By.id("vast_video_duration"))
-      .sendKeys(video_duration);
-    await driver
-      .findElement(By.id("vast_video_clickthrough_url"))
-      .sendKeys(video_url);
-    await driver.findElement(By.id("submit")).click();
-    console.log("Banner Created Successfully");
-
-    
+    if(!banner){
+       await driver
+          .findElement(By.name("type"))
+          .sendKeys("Inline Video Ad (pre/mid/post-roll)");
+        await driver.findElement(By.id("description")).sendKeys(video_name);
+        await driver.findElement(By.id("vast_video_filename")).sendKeys(video_url);
+        await driver.findElement(By.id("vast_video_type")).sendKeys("MP4");
+        await driver
+          .findElement(By.id("vast_video_duration"))
+          .sendKeys(video_duration);
+        await driver
+          .findElement(By.id("vast_video_clickthrough_url"))
+          .sendKeys(video_url);
+        await driver.findElement(By.id("submit")).click();
+        console.log("Banner Created Successfully");
+    }
+       
     await driver.get("https://console.revive-adserver.net/website-index.php");
     console.log("website opened")
     let found_site = false;
