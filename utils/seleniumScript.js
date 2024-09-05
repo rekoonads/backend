@@ -124,7 +124,7 @@ const openPage = async (userId, campaignId, strategyId) => {
         .click();
       await driver.sleep(1000);
     } else {
-      await driver.wait(until.elementLocated(By.tagName('.tableWrapper table tbody')), 10000);
+      await driver.wait(until.elementLocated(By.css('.tableWrapper table tbody')), 10000);
         const rows = await driver.findElements(By.css('tbody tr'));
 
         for (let row of rows) {
