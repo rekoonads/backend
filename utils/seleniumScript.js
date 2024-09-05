@@ -124,33 +124,45 @@ const openPage = async (userId, campaignId, strategyId) => {
         .click();
       await driver.sleep(1000);
     } else {
-      await driver.wait(until.elementLocated(By.css('.tableWrapper table tbody')), 10000);
-        const rows = await driver.findElements(By.css('tbody tr'));
+      try{
+          await driver.wait(until.elementLocated(By.css('.tableWrapper table tbody')), 10000);
+            // const rows = await driver.findElements(By.css('tbody tr'));
+            const rows = await driver.findElements(By.css('tbody tr:has(td a.inlineIcon.iconCampaign)'));
 
-        for (let row of rows) {
-          const campaignElement = await row.findElement(By.css('td a.inlineIcon.iconCampaign'));
-          const campaignText = await campaignElement.getText();
-          if (campaignText === campaignName) {
-            campaign_found = true;
-            console.log(`Found campaign: ${campaignText}`);
 
-            
-            const addBannerLink = await row.findElement(By.css('a.inlineIcon.iconBanners'));
-            await addBannerLink.click();
+            for (let row of rows) {
+              // const campaignElement = await row.findElement(By.css('td a.inlineIcon.iconCampaign'));
+              const campaignElement = await driver.wait(until.elementLocated(By.css('td a.inlineIcon.iconCampaign')), 10000);
 
-            await driver.wait(until.elementLocated(By.css('.tableWrapper > tbody > tr')), 5000);
-            const noBannerMessage = await driver.findElements(By.css('.tableMessage'));
+              const campaignText = await campaignElement.getText();   
+              if (campaignText === campaignName) {
+                campaign_found = true;
+                console.log(`Found campaign: ${campaignText}`);
 
-                if (noBannerMessage.length > 0) {
-                  banner = true;
-                }else{
-                  const addBannerLink = await row.findElement(By.css('a.inlineIcon.iconBannerAdd'));
-                }
+                
+                const addBannerLink = await row.findElement(By.css('a.inlineIcon.iconBanners'));
+                await addBannerLink.click();
 
-            console.log('Clicked "Add new banner".');
-            break; 
-          }
+                await driver.wait(until.elementLocated(By.css('.tableWrapper > tbody > tr')), 5000);
+                const noBannerMessage = await driver.findElements(By.css('.tableMessage'));
+
+                    if (noBannerMessage.length > 0) {
+                      banner = true;
+                    }else{
+                      const addBannerLink = await row.findElement(By.css('a.inlineIcon.iconBannerAdd'));
+                    }
+
+                console.log('Clicked "Add new banner".');
+                break; 
+              }
+            }
+      }catch(error){
+        console.log("error",error);
+        return {
+          status:"error",
+          message:error.message,
         }
+      }
       await driver.findElement(By.css("a.inlineIcon.iconCampaignAdd")).click();
       await driver.sleep(1000);
     }
