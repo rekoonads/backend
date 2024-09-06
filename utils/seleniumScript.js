@@ -6,6 +6,7 @@ import Strategy from "../models/Strategy.js";
 import { userModel } from "../models/User.js";
 
 import chrome from "selenium-webdriver/chrome.js";
+import firefox from 'selenium-webdriver/firefox.js';
 
 import "dotenv/config";
 
@@ -46,18 +47,24 @@ const openPage = async (userId, campaignId, strategyId) => {
   //   throw new Error("Please add a website.");
   // }
 
-  let options = new chrome.Options();
-  options.addArguments(
-    "--headless",
-    "--disable-gpu",
-    "--no-sandbox",
-    "--disable-dev-shm-usage"
-  );
+  // let options = new chrome.Options();
+  // options.addArguments(
+  //   "--headless",
+  //   "--disable-gpu",
+  //   "--no-sandbox",
+  //   "--disable-dev-shm-usage"
+  // );
+  let options = new firefox.Options();
+  options.addArguments("--headless");
 
+  // let driver = await new Builder()
+  //   .forBrowser("chrome")
+  //   .setChromeOptions(options)
+  //   .build();
   let driver = await new Builder()
-    .forBrowser("chrome")
-    .setChromeOptions(options)
-    .build();
+  .forBrowser('firefox')
+  .setFirefoxOptions(options)
+  .build();
 
   try {
     await driver.get(url);
