@@ -33,7 +33,7 @@ const storage = new CloudinaryStorage({
       };
     }
   },
-}); 
+});
 function formatDateToCustomString(date) {
   const options = {
     weekday: "short",
@@ -61,9 +61,12 @@ const updateStatus = async () => {
 
 cron.schedule("0 0 * * *", updateStatus);
 
-const upload = multer({ storage: storage,limits: {
-  fileSize: 500 * 1024 * 1024, 
-}, });
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 500 * 1024 * 1024,
+  },
+});
 const { urlencoded, json } = pkg;
 const PORT = process.env.PORT || 8080;
 
@@ -79,7 +82,7 @@ app.use(
   cors({
     origin: "*",
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
-    credentials: true, // Allow credentials
+    credentials: true,
   })
 );
 
@@ -92,17 +95,12 @@ app.use("/", apiRouter);
 app.use("/api/payment", payment);
 
 app.post("/upload_video", upload.single("video"), (req, res) => {
-  if (req.file) {
+  if (req.file && req.file.path) {
     console.log("File uploaded:", req.file);
-    if (req.file.path) {
-      res.json({ url: req.file.path });
-    } else {
-      console.error("File path not available");
-      res.status(400).json({ error: "Image upload failed" });
-    }
+    res.json({ url: req.file.path });
   } else {
     console.error("File upload failed:", req.file);
-    res.status(400).json({ error: "Image upload failed" });
+    res.status(400).json({ error: "Video upload failed" });
   }
 });
 
