@@ -5,6 +5,7 @@ import Strategy from "../models/Strategy.js";
 import { userModel } from "../models/User.js";
 
 import "dotenv/config";
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function convertDateMode(dateString) {
   let inputDate = dateString ? dateString : new Date();
@@ -113,6 +114,7 @@ const openPage = async (userId, campaignId, strategyId) => {
 
       // Add new campaign if not found
       if (!campaign_found) {
+        await sleep(1500);
         await page.type('#campaignname', campaignName);
         await page.click('#priority-e');
         await page.click('#startSet_specific');
