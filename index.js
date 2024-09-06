@@ -33,7 +33,7 @@ const storage = new CloudinaryStorage({
       };
     }
   },
-});
+}); 
 function formatDateToCustomString(date) {
   const options = {
     weekday: "short",
