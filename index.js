@@ -33,7 +33,7 @@ const storage = new CloudinaryStorage({
       };
     }
   },
-}); 
+});
 function formatDateToCustomString(date) {
   const options = {
     weekday: "short",
@@ -61,9 +61,12 @@ const updateStatus = async () => {
 
 cron.schedule("0 0 * * *", updateStatus);
 
-const upload = multer({ storage: storage,limits: {
-  fileSize: 500 * 1024 * 1024, 
-}, });
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 500 * 1024 * 1024,
+  },
+});
 const { urlencoded, json } = pkg;
 const PORT = process.env.PORT || 8080;
 
@@ -75,16 +78,26 @@ app.use(cookieParser());
 app.use(helmet());
 app.use(compression());
 
-// app.use((req, res, next) => {
-//   res.header("Access-Control-Allow-Origin", "http://localhost:5173");
-//   res.header("Access-Control-Allow-Origin", "https://rekoon-ads.vercel.app");
-//   res.header("Access-Control-Allow-Origin", "https://www.getsweven.com")
-//   res.header("Access-Control-Allow-Origin", "https://backend-ruddy-phi.vercel.app")
-// })
-
+// app.use(
+//   cors({
+//     origin: "http://localhost:5173",
+//     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
+//     credentials: true, // Allow credentials
+//   })
+// );
 app.use(
   cors({
-    origin: "*",
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        "http://localhost:5173",
+        "https://www.getsweven.com",
+      ];
+      if (allowedOrigins.includes(origin) || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
     credentials: true, // Allow credentials
   })
