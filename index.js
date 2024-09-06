@@ -75,9 +75,26 @@ app.use(cookieParser());
 app.use(helmet());
 app.use(compression());
 
+// app.use(
+//   cors({
+//     origin: "http://localhost:5173",
+//     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
+//     credentials: true, // Allow credentials
+//   })
+// );
 app.use(
   cors({
-    origin: "*",
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        "http://localhost:5173",
+        "https://www.getsweven.com"
+      ];
+      if (allowedOrigins.includes(origin) || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
     credentials: true, // Allow credentials
   })
