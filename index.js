@@ -73,6 +73,13 @@ app.use(cookieParser());
 app.use(helmet());
 app.use(compression());
 
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "http://localhost:5173");
+  res.header("Access-Control-Allow-Origin", "https://rekoon-ads.vercel.app");
+  res.header("Access-Control-Allow-Origin", "https://www.getsweven.com")
+  res.header("Access-Control-Allow-Origin", "https://backend-ruddy-phi.vercel.app")
+})
+
 app.use(
   cors({
     origin: "*",
