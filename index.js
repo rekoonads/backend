@@ -61,7 +61,9 @@ const updateStatus = async () => {
 
 cron.schedule("0 0 * * *", updateStatus);
 
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage,limits: {
+  fileSize: 500 * 1024 * 1024, 
+}, });
 const { urlencoded, json } = pkg;
 const PORT = process.env.PORT || 8080;
 
