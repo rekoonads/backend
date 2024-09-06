@@ -92,6 +92,7 @@ app.use(
         "http://localhost:5173",
         "https://www.getsweven.com",
       ];
+      console.log("Request Origin: ", origin); // Debug log
       if (allowedOrigins.includes(origin) || !origin) {
         callback(null, true);
       } else {
@@ -99,7 +100,7 @@ app.use(
       }
     },
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
-    credentials: true, // Allow credentials
+    credentials: true,
   })
 );
 
@@ -111,17 +112,12 @@ app.use("/", apiRouter);
 app.use("/api/payment", payment);
 
 app.post("/upload_video", upload.single("video"), (req, res) => {
-  if (req.file) {
+  if (req.file && req.file.path) {
     console.log("File uploaded:", req.file);
-    if (req.file.path) {
-      res.json({ url: req.file.path });
-    } else {
-      console.error("File path not available");
-      res.status(400).json({ error: "Image upload failed" });
-    }
+    res.json({ url: req.file.path });
   } else {
     console.error("File upload failed:", req.file);
-    res.status(400).json({ error: "Image upload failed" });
+    res.status(400).json({ error: "Video upload failed" });
   }
 });
 
