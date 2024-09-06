@@ -11,19 +11,24 @@ export default async (req, res) => {
     // Create the bill document
     const newBill = await Bill.create({ userId,campaignId, strategyId, successPaymentId });
     let invocation_code = await openPage(userId,campaignId,strategyId);
-
-
+    let error_Id = `error-1_${uuidv4()}`;
+    const newError = new ErrorModel({
+      errorId:'',
+      userId,
+      campaignId,
+      strategyId,
+      errorMessage:'safe-save',
+      status:'Active',
+    });
+    await newError.save();
     let count =0;
     if(invocation_code.status=="error"){
-        const newError = new ErrorModel({
-          errorId:`error-1_${uuidv4()}`,
-          userId,
-          campaignId,
-          strategyId,
-          errorMessage:invocation_code.message,
-          status:'Active',
-        });
-        await newError.save();
+      const updatedError = await ErrorModel.findOneAndUpdate(
+        { errorId: error_Id }, 
+        { errorMessage: invocation_code.message}, // Update errorMessage
+        { new: true } // Return the updated document
+      );
+      
        while(invocation_code.status=="error" && count<3){
         invocation_code = await openPage(userId,campaignId,strategyId);
         count++;
