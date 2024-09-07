@@ -7,7 +7,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon index.js",
-    "postinstall": "puppeteer install",
     "build": "echo 'Build script not required for backend server'"
   },
   "keywords": [],
@@ -30,7 +29,6 @@
     "multer-storage-cloudinary": "^4.0.0",
     "node-cron": "^3.0.3",
     "nodemon": "^3.1.4",
-    "puppeteer": "^23.3.0",
     "razorpay": "^2.9.4",
     "selenium-webdriver": "^4.23.0",
     "uuid": "^10.0.0",

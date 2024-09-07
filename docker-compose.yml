@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+  selenium:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/src/app
+    environment:
+      - REVIVE_URL="https://console.revive-adserver.net/"
+      - REVIVE_USERNAME="swevensweven"
+      - REVIVE_PASSWORD="Sweven@2024!!"
+    tty: true

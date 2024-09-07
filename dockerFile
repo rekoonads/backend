@@ -1,0 +1,55 @@
+# Use the official Node.js image
+FROM node:18
+
+# Install Chrome
+RUN apt-get update && apt-get install -y \
+    wget \
+    curl \
+    unzip \
+    ca-certificates \
+    gnupg \
+    hicolor-icon-theme \
+    libcanberra-gtk* \
+    libgl1-mesa-dri \
+    libgl1-mesa-glx \
+    libpango1.0-0 \
+    libpulse0 \
+    libv4l-0 \
+    fonts-symbola \
+    --no-install-recommends \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install ChromeDriver
+RUN CHROMEDRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE) \
+    && wget -O /tmp/chromedriver.zip https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip \
+    && unzip /tmp/chromedriver.zip -d /usr/local/bin/ \
+    && rm /tmp/chromedriver.zip
+
+# Install Chrome
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list \
+    && apt-get update \
+    && apt-get install -y google-chrome-stable \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set the working directory
+WORKDIR /usr/src/app
+
+# Copy project files
+COPY . .
+
+# Install project dependencies
+RUN npm install
+
+# Set environment variables (adjust accordingly)
+ENV DISPLAY=:99
+ENV REVIVE_URL=your_url_here
+ENV REVIVE_USERNAME=your_username_here
+ENV REVIVE_PASSWORD=your_password_here
+
+# Expose the port your app will run on (optional)
+EXPOSE 3000
+
+# Run the app
+CMD ["npm", "start"]
