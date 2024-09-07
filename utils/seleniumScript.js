@@ -22,9 +22,7 @@ function getWebsitesByUserId(userId) {
 
 const openPage = async (userId, campaignId, strategyId) => {
   try {
-    const browser = await puppeteer.launch({ headless: true });
-    const page = await browser.newPage();
-
+   
     const url = process.env.REVIVE_URL;
     const username = process.env.REVIVE_USERNAME;
     const password = process.env.REVIVE_PASSWORD;
@@ -47,13 +45,16 @@ const openPage = async (userId, campaignId, strategyId) => {
 
     try {
       // Navigate to Revive URL
+      const browser = await puppeteer.launch({ headless: true });
+     
+      const page = await browser.newPage();
       await page.goto(url);
 
       // Login
       await page.type('input[name="username"]', username);
       await page.type('input[name="password"]', password);
       await page.click('#login');
-      await page.waitForNavigation();
+      // await page.waitForNavigation();
 
       console.log("Login Successfully");
 
@@ -63,16 +64,28 @@ const openPage = async (userId, campaignId, strategyId) => {
       // Check if advertiser exists
       let found = false;
       try {
-        const advertiserSelector = "span ul li.inlineIcon.iconAdvertiser";
-        await page.waitForSelector(advertiserSelector);
-        const elements = await page.$$(advertiserSelector);
+          const initialAdvertiserSelector = "li.ent.inlineIcon.iconAdvertiser"; // Selector for the initial li
+          await page.waitForSelector(initialAdvertiserSelector); // Wait for the element to be available
+          await page.click(initialAdvertiserSelector);
 
-        for (let element of elements) {
+          // const advertiserSelector = "span ul li.inlineIcon.iconAdvertiser";
+          // await page.waitForSelector(advertiserSelector);
+          // const elements = await page.$$(advertiserSelector);
+
+          const advertiserListSelector = ".column.first ul.active li a.inlineIcon.iconAdvertiser";
+          await page.waitForSelector(advertiserListSelector); // Wait for the list to appear
+
+          const advertiserElements = await page.$$(advertiserListSelector);
+
+          for (let element of advertiserElements) {
           const title = await page.evaluate(el => el.getAttribute('title'), element);
-          if (title === user_name) {
+          
+          console.log("Fetched Title: ", title);
+
+          if (title === user_name) { 
+            console.log(`Found: ${title}`);
             found = true;
-            console.log(`Found ${user_name}`);
-            await element.click();
+            await element.click(); 
             break;
           }
         }
@@ -80,9 +93,10 @@ const openPage = async (userId, campaignId, strategyId) => {
         console.log(`Error finding advertiser: ${error}`);
       }
 
-      // Add new advertiser if not found
       if (!found) {
         await page.goto("https://console.revive-adserver.net/advertiser-edit.php");
+        await page.click('#clientname'); // Click to focus on the input field
+        await page.evaluate(() => document.querySelector('#clientname').value = '');
         await page.type('#clientname', user_name);
         await page.type('#contact', user_number.toString());
         await page.type('#email', user_email);
@@ -93,33 +107,84 @@ const openPage = async (userId, campaignId, strategyId) => {
       // Handle campaigns
       let campaign_found = false;
       try {
-        await page.waitForSelector('.tableWrapper table tbody');
-        const rows = await page.$$('.tableWrapper table tbody tr:has(td a.inlineIcon.iconCampaign)');
+        await page.waitForSelector('.tableWrapper table tbody'); // Wait for the table to load
+
+        const rows = await page.$$('.tableWrapper table tbody tr');
 
         for (let row of rows) {
-          const campaignElement = await row.$('td a.inlineIcon.iconCampaign');
-          const campaignText = await page.evaluate(el => el.innerText, campaignElement);
+          const campaignElement = await row.$('td a.inlineIcon.iconCampaignDisabled'); // Adjust the class name if needed
+          
+          if (campaignElement) {
+            // Get the text content of the campaign element
+            const campaignText = await page.evaluate(el => el.innerText.trim(), campaignElement);
+            console.log("Campaign text: ", campaignText);
 
-          if (campaignText === campaignName) {
-            campaign_found = true;
-            console.log(`Found campaign: ${campaignText}`);
-            await row.$eval('a.inlineIcon.iconBanners', el => el.click());
-            break;
+            // Compare with the desired campaign name
+            if (campaignText === campaignName) {
+              campaign_found = true;
+              console.log(`Found campaign: ${campaignText}`);
+
+              // Click on the "Banners" link inside the same row
+              await row.$eval('a.inlineIcon.iconBanners', el => el.click());
+              break;
+            }
           }
         }
+
       } catch (error) {
         console.log("Error handling campaigns:", error);
         return { status: "error", message: error.message };
       }
-
+      return "a";
       // Add new campaign if not found
       if (!campaign_found) {
-        await sleep(1500);
-        await page.type('#campaignname', campaignName);
+        const addCampaignSelector = 'a.inlineIcon.iconCampaignAdd'; // Selector for the "Add new campaign" link
+
+        await page.waitForSelector(addCampaignSelector);
+        await page.click(addCampaignSelector);
+        const campaignNameInputSelector = 'input#campaignname'; // Selector for the input field
+
+        await page.waitForSelector(campaignNameInputSelector);
+
+        await page.evaluate(selector => {
+          document.querySelector(selector).value = ''; // Clears the value
+        }, campaignNameInputSelector);
+
+        await page.type(campaignNameInputSelector, campaignName);
         await page.click('#priority-e');
-        await page.click('#startSet_specific');
+        
         const start_date = convertDateMode(startDate);
         const end_date = convertDateMode(endDate);
+
+        const specificDateRadioSelector = '#startSet_specific';
+        await page.waitForSelector(specificDateRadioSelector, { visible: true });
+        
+        // Debug: Check if the element is visible and interactable
+        const isVisible = await page.evaluate(selector => {
+          const element = document.querySelector(selector);
+          return element && window.getComputedStyle(element).display !== 'none' && element.offsetWidth > 0 && element.offsetHeight > 0;
+        }, specificDateRadioSelector);
+        
+        if (!isVisible) {
+          console.error('Element is not visible or not interactable:', specificDateRadioSelector);
+          return;
+        }
+        
+        // Click the radio button
+        await page.click(specificDateRadioSelector);
+
+        const specificStartDateSpanSelector = '#specificStartDateSpan';
+        await page.waitForSelector(specificStartDateSpanSelector, { visible: true });
+
+        const startDateInputSelector = '#start';
+        await page.waitForSelector(startDateInputSelector);
+        await page.evaluate(selector => {
+          document.querySelector(selector).value = ''; // Clear existing value
+        }, startDateInputSelector);
+
+        await page.type(startDateInputSelector, start_date);
+
+        await page.click('#startSet_specific');
         await page.type('#start', start_date);
         await page.click('#endSet_specific');
         await page.type('#end', end_date);

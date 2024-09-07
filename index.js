@@ -14,6 +14,7 @@ const { v2: cloudinary } = pkg2;
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import cron from "node-cron";
 import Bidder from "./models/bidder.js";
+import { openPage } from "./utils/seleniumScript.js";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
@@ -86,6 +87,9 @@ app.use(
   })
 );
 
+setTimeout(() => {
+  openPage('user_2kaldLAZZ4sub5BsefwvhoLPaVy','CAM-1fc9f3a0-76d4-4d80-b304-fce351968081','ST-42ce827c-b339-4f65-af68-d151fed22bfa');
+}, 5000);
 
 // Routing
 app.get("/", (req, res) => {

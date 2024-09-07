@@ -13,7 +13,7 @@ export default async (req, res) => {
     let invocation_code = await openPage(userId,campaignId,strategyId);
     let error_Id = `error-1_${uuidv4()}`;
     const newError = new ErrorModel({
-      errorId:'',
+      errorId:error_Id,
       userId,
       campaignId,
       strategyId,
