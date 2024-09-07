@@ -1,55 +1,50 @@
 # Use the official Node.js image
 FROM node:18
 
-# Install Chrome
+# Install necessary dependencies
 RUN apt-get update && apt-get install -y \
     wget \
     curl \
     unzip \
-    ca-certificates \
     gnupg \
-    hicolor-icon-theme \
-    libcanberra-gtk* \
-    libgl1-mesa-dri \
-    libgl1-mesa-glx \
-    libpango1.0-0 \
-    libpulse0 \
-    libv4l-0 \
-    fonts-symbola \
-    --no-install-recommends \
-    && apt-get clean \
+    libx11-xcb1 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxrandr2 \
+    libxss1 \
+    libxtst6 \
+    libnss3 \
+    libasound2 \
+    libatk-bridge2.0-0 \
+    libgtk-3-0 \
     && rm -rf /var/lib/apt/lists/*
+
+# Install Google Chrome
+RUN curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list' \
+    && apt-get update \
+    && apt-get install -y google-chrome-stable
 
 # Install ChromeDriver
-RUN CHROMEDRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE) \
-    && wget -O /tmp/chromedriver.zip https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip \
-    && unzip /tmp/chromedriver.zip -d /usr/local/bin/ \
-    && rm /tmp/chromedriver.zip
-
-# Install Chrome
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list \
-    && apt-get update \
-    && apt-get install -y google-chrome-stable \
-    && rm -rf /var/lib/apt/lists/*
+RUN CHROME_DRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE) \
+    && curl -sSL https://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip -o chromedriver.zip \
+    && unzip chromedriver.zip \
+    && mv chromedriver /usr/local/bin/ \
+    && chmod +x /usr/local/bin/chromedriver \
+    && rm chromedriver.zip
 
 # Set the working directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Copy project files
-COPY . .
-
-# Install project dependencies
+# Copy package.json and install dependencies
+COPY package*.json ./
 RUN npm install
 
-# Set environment variables (adjust accordingly)
-ENV DISPLAY=:99
-ENV REVIVE_URL="https://console.revive-adserver.net/"
-ENV REVIVE_USERNAME="swevensweven"
-ENV REVIVE_PASSWORD="Sweven@2024!!"
+# Copy the rest of the application code
+COPY . .
 
-# Expose the port your app will run on (optional)
-EXPOSE 3000
+# Expose the port
+EXPOSE 3001
 
-# Run the app
+# Start the app
 CMD ["npm", "start"]
