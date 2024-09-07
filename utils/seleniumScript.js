@@ -68,6 +68,7 @@ const openPage = async (userId, campaignId, strategyId) => {
       // .build();
 
       try {
+        
         await driver.get(url);
 
         // Login
