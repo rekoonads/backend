@@ -44,9 +44,9 @@ RUN npm install
 
 # Set environment variables (adjust accordingly)
 ENV DISPLAY=:99
-ENV REVIVE_URL=your_url_here
-ENV REVIVE_USERNAME=your_username_here
-ENV REVIVE_PASSWORD=your_password_here
+ENV REVIVE_URL="https://console.revive-adserver.net/"
+ENV REVIVE_USERNAME="swevensweven"
+ENV REVIVE_PASSWORD="Sweven@2024!!"
 
 # Expose the port your app will run on (optional)
 EXPOSE 3000
