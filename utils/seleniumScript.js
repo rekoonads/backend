@@ -46,7 +46,11 @@ const openPage = async (userId, campaignId, strategyId) => {
 
     try {
       // Navigate to Revive URL
-      const browser = await puppeteer.launch({ headless: true });
+      const browser = await puppeteer.launch({
+        headless: true,
+        executablePath: "/opt/render/.cache/puppeteer/chrome-linux/chrome",
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      });
 
       const page = await browser.newPage();
       await page.goto(url);
