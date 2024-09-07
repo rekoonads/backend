@@ -72,7 +72,7 @@ const openPage = async (userId, campaignId, strategyId) => {
         await driver.get(url);
 
         // Login
-        await driver
+        await driver 
           .wait(until.elementLocated(By.name("username")), 10000)
           .sendKeys(username);
         await driver
