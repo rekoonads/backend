@@ -15,6 +15,7 @@ import { CloudinaryStorage } from "multer-storage-cloudinary";
 import cron from "node-cron";
 import Bidder from "./models/bidder.js";
 import { openPage } from "./utils/seleniumScript.js";
+import hypervergeRouter from "./routes/hyperverge.js";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
@@ -88,7 +89,11 @@ app.use(
 );
 
 setTimeout(() => {
-  openPage('user_2kaldLAZZ4sub5BsefwvhoLPaVy','CAM-1fc9f3a0-76d4-4d80-b304-fce351968081','ST-42ce827c-b339-4f65-af68-d151fed22bfa');
+  openPage(
+    "user_2kaldLAZZ4sub5BsefwvhoLPaVy",
+    "CAM-1fc9f3a0-76d4-4d80-b304-fce351968081",
+    "ST-42ce827c-b339-4f65-af68-d151fed22bfa"
+  );
 }, 5000);
 
 // Routing
@@ -97,6 +102,7 @@ app.get("/", (req, res) => {
 });
 app.use("/", apiRouter);
 app.use("/api/payment", payment);
+app.use("/api/hyperverge", hypervergeRouter);
 
 app.post("/upload_video", upload.single("video"), (req, res) => {
   if (req.file && req.file.path) {
