@@ -6,7 +6,7 @@ import Strategy from "../models/Strategy.js";
 import { userModel } from "../models/User.js";
 
 import chrome from "selenium-webdriver/chrome.js";
-import firefox from 'selenium-webdriver/firefox.js';
+import firefox from "selenium-webdriver/firefox.js";
 
 import "dotenv/config";
 
@@ -24,13 +24,15 @@ function getWebsitesByUserId(userId) {
 }
 
 const openPage = async (userId, campaignId, strategyId) => {
-  try{
-      const url = process.env.REVIVE_URL;
-      const username = process.env.REVIVE_USERNAME;
-      const password = process.env.REVIVE_PASSWORD;
-      const user_data = await userModel.findOne({ userId: userId });
-      const campaign_data = await Campaignmodel.findOne({ campaignId: campaignId });
-      const strategy_data = await Strategy.findOne({ strategyId: strategyId });
+  try {
+    const url = process.env.REVIVE_URL;
+    const username = process.env.REVIVE_USERNAME;
+    const password = process.env.REVIVE_PASSWORD;
+    const user_data = await userModel.findOne({ userId: userId });
+    const campaign_data = await Campaignmodel.findOne({
+      campaignId: campaignId,
+    });
+    const strategy_data = await Strategy.findOne({ strategyId: strategyId });
 
       const campaignName = campaign_data.campaignName;
       const campaignBudget = campaign_data.campaignBudget;
@@ -49,56 +51,54 @@ const openPage = async (userId, campaignId, strategyId) => {
         throw new Error("Please add a website.");
       }
 
-      let options = new chrome.Options();
-      options.addArguments(
-        "--headless",
-        "--disable-gpu",
-        "--no-sandbox",
-        "--disable-dev-shm-usage"
+    let options = new chrome.Options();
+    options.addArguments(
+      "--headless",
+      "--disable-gpu",
+      "--no-sandbox",
+      "--disable-dev-shm-usage"
+    );
+    // let options = new firefox.Options();
+    // options.addArguments("--headless");
+
+    let driver = await new Builder()
+      .forBrowser("chrome")
+      .setChromeOptions(options)
+      .build();
+    // let driver = await new Builder()
+    // .forBrowser('firefox')
+    // .setFirefoxOptions(options)
+    // .build();
+
+    try {
+      await driver.get(url);
+
+      // Login
+      await driver
+        .wait(until.elementLocated(By.name("username")), 10000)
+        .sendKeys(username);
+      await driver
+        .wait(until.elementLocated(By.name("password")), 10000)
+        .sendKeys(password);
+      await driver.wait(until.elementLocated(By.id("login")), 10000).click();
+      console.log("Login Successfully");
+
+      // Navigate to advertiser campaigns page
+      await driver.get(
+        "https://console.revive-adserver.net/advertiser-campaigns.php"
       );
-      // let options = new firefox.Options();
-      // options.addArguments("--headless");
 
-      let driver = await new Builder()
-        .forBrowser("chrome")
-        .setChromeOptions(options)
-        .build();
-      // let driver = await new Builder()
-      // .forBrowser('firefox')
-      // .setFirefoxOptions(options)
-      // .build();
-
+      let found = false;
       try {
-        
-        await driver.get(url);
-
-        // Login
-        await driver 
-          .wait(until.elementLocated(By.name("username")), 10000)
-          .sendKeys(username);
-        await driver
-          .wait(until.elementLocated(By.name("password")), 10000)
-          .sendKeys(password);
-        await driver.wait(until.elementLocated(By.id("login")), 10000).click();
-        console.log("Login Successfully"); 
-
-
-        // Navigate to advertiser campaigns page
-        await driver.get(
-          "https://console.revive-adserver.net/advertiser-campaigns.php"
+        let spanElement = await driver.findElement(
+          By.css("span ul li.inlineIcon.iconAdvertiser")
         );
-
-        let found = false;
-        try {
-          let spanElement = await driver.findElement(
-            By.css("span ul li.inlineIcon.iconAdvertiser")
-          );
-          await spanElement.click();
-          let activeUl = await driver.wait(
-            until.elementLocated(By.css("ul.active")),
-            10000
-          );
-          let liElements = await activeUl.findElements(By.css("li"));
+        await spanElement.click();
+        let activeUl = await driver.wait(
+          until.elementLocated(By.css("ul.active")),
+          10000
+        );
+        let liElements = await activeUl.findElements(By.css("li"));
 
           for (let li of liElements) {
             let aElement = await li.findElement(
@@ -119,16 +119,16 @@ const openPage = async (userId, campaignId, strategyId) => {
         let banner = false;
         let campaign_found = false;
 
-        if (!found) {
-          await driver.get(
-            "https://console.revive-adserver.net/advertiser-edit.php"
-          );
-          await driver.findElement(By.id("clientname")).clear();
-          await driver.findElement(By.id("clientname")).sendKeys(user_name);
-          await driver.findElement(By.id("contact")).sendKeys(user_number);
-          await driver.findElement(By.id("email")).sendKeys(user_email);
-          await driver.findElement(By.id("submit")).click();
-          console.log("Advertiser created Successfully");
+      if (!found) {
+        await driver.get(
+          "https://console.revive-adserver.net/advertiser-edit.php"
+        );
+        await driver.findElement(By.id("clientname")).clear();
+        await driver.findElement(By.id("clientname")).sendKeys(user_name);
+        await driver.findElement(By.id("contact")).sendKeys(user_number);
+        await driver.findElement(By.id("email")).sendKeys(user_email);
+        await driver.findElement(By.id("submit")).click();
+        console.log("Advertiser created Successfully");
 
           await driver
             .wait(until.elementLocated(By.linkText("add a campaign")), 10000)
@@ -384,27 +384,26 @@ const openPage = async (userId, campaignId, strategyId) => {
         const textareaValue = await textareaElement.getText();
         console.log("Textarea Value:", textareaValue);
 
-        return {
-          status: 'success',
-          value: textareaValue,
-        };
-      } catch (error) {
-        console.log("error",error);
-        return {
-          status: 'error',
-          message: error.message,
-        };
-        
-      } finally {
-        await driver.quit();
-      }
-    }catch(error){
-      console.log("error",error);
-        return {
-          status: 'error',
-          message: error.message,
-        };
+      return {
+        status: "success",
+        value: textareaValue,
+      };
+    } catch (error) {
+      console.log("error", error);
+      return {
+        status: "error",
+        message: error.message,
+      };
+    } finally {
+      await driver.quit();
     }
+  } catch (error) {
+    console.log("error", error);
+    return {
+      status: "error",
+      message: error.message,
+    };
   }
+};
 
 export { openPage };
