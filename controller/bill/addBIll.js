@@ -36,6 +36,11 @@ export default async (req, res) => {
     }
    
     if (newBill) {
+      await ErrorModel.findOneAndUpdate(
+        { errorId: error_Id }, 
+        { status: "Inactive"}, // Update errorMessage
+        { new: true } // Return the updated document
+      );
       return res.status(201).json({ newBill: newBill, invocation_code: invocation_code });
     } else {
         return res.status(400).json({ error: 'Error at Request' });
