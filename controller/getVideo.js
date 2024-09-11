@@ -1,7 +1,7 @@
 import AudiencePriorityQueues from '../PriorityQ/audiencePriorityQueues.js';
 
 export default async (req, res) => {
-    const contentType = req.query.type;
+    const contentType = "Arts & Entertainment"||req.query.type;
   
     if (!contentType) {
       return res.status(400).json({ error: 'Missing content type parameter' });

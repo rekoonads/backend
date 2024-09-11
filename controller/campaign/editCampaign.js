@@ -2,8 +2,7 @@ import Campaignmodel from "../../models/Campaign.js";
 
 export default async (req, res) => {
   try { // Get campaignId from query parameters
-    const updatedData = req.body; // Assume the updated data is sent in the request body
-    const campaignId = updatedData.campaignId;
+    const { campaignId, campaignName } = req.body;
 
     if (!campaignId) {
       return res.status(400).json({ message: "campaignId is required" });
@@ -12,7 +11,7 @@ export default async (req, res) => {
     // Find the campaign by campaignId and update it
     const updatedCampaign = await Campaignmodel.findOneAndUpdate(
       { campaignId: campaignId }, // Find the campaign by campaignId
-      updatedData, // Data to update the campaign with
+      {campaignName}, // Data to update the campaign with
       { new: true } // Return the updated document
     );
 

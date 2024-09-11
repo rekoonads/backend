@@ -13,7 +13,10 @@ class AudiencePriorityQueues {
 
   async fetchAndEnqueue(audience) {
     try {
-      const advertisers = await Bidder.find({ audiences: audience, status: 'Active' });
+      // audiences: audience, 
+      const advertisers = await Bidder.find({status: 'Active' });
+      console.log("advertisers :-- ",advertisers);
+      console.log("running :-  ",advertisers.length)
       // console.log(advertisers)
 
       if (advertisers.length > 0) {
