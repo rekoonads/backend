@@ -32,8 +32,10 @@ today.setHours(0, 0, 0, 0);
       console.error(`Invalid date(s) found: startDate=${startDate}, endDate=${endDate}`);
       return 0; // Return 0 if dates are invalid to avoid NaN
     }
+
     // Calculate difference in milliseconds and convert to days
     const durationInDays = (end - start) / (1000 * 60 * 60 * 24) + 1; // +1 to include both start and end dates
+    
     return durationInDays;
   }
 export default async (req, res) => {
@@ -49,8 +51,7 @@ export default async (req, res) => {
       const { startDate, endDate } = campaign;
 
       // Normalize date formats if necessary
-      const durationInDays = calculateDuration(startDate, endDate);
-
+      const durationInDays = await calculateDuration(startDate, endDate);
       if (durationInDays > 0) {
         totalDays += durationInDays; // Sum only valid durations
         validCampaigns++;
@@ -60,8 +61,8 @@ export default async (req, res) => {
 
     // Calculate the average duration
     const averageDuration = totalDays / campaignCount;
-    console.log("average duration is: -" ,averageDuration)
-    return res.status(200).json({totalCampaign:campaigns,activeCampaign:activeCampaigns,average:averageDuration});
+    console.log("average duration is: -" ,averageDuration.toFixed(1))
+    return res.status(200).json({totalCampaign:campaigns,activeCampaign:activeCampaigns,average:averageDuration.toFixed(1)});
     // return campaigns
     //   ? res.status(200).json(campaigns)
     //   : res.status(503).json({ message: `No Campaigns Created` });
