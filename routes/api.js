@@ -34,6 +34,8 @@ import saveError from "../controller/saveError.js";
 import searchCampaign from "../controller/campaign/searchCampaign.js";
 import searchStrategy from "../controller/strategy/searchStrategy.js";
 import campaignAdvertiser from "../controller/campaign/campaignAdvertiser.js";
+import getCampaignscount from "../controller/campaign/getCampaignscount.js";
+import getAllCampaignForAdmin from "../controller/getAllCampaignForAdmin.js";
 
 
 const router = Router();
@@ -51,7 +53,11 @@ router
   .delete(deleteCampaign);
 router.post("/api/campaigns", createCampaign); 
 router.get("/api/campaigns-agency/:agencyId", campaignAgency)
-router.get("/api/campaigns-advertiser/:advertiserId", campaignAdvertiser)
+router.get("/api/campaigns-advertiser/:advertiserId", campaignAdvertiser);
+
+//For Admin Control
+router.get("/api/get-all-campaigns", getAllCampaignForAdmin)
+
 
 //Strategy
 router
@@ -97,6 +103,7 @@ router.post('/api/save-error',saveError)
 router.get('/api/get-campaign',searchCampaign)
 
 router.get('/api/get-strategy',searchStrategy)
+router.get('/api/campaign-data',getCampaignscount)
 //vmap 
 router.get('/api/vmap', vmap)
 

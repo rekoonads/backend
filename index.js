@@ -14,7 +14,6 @@ const { v2: cloudinary } = pkg2;
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import cron from "node-cron";
 import Bidder from "./models/bidder.js";
-import { openPage } from "./utils/seleniumScript.js";
 import hypervergeRouter from "./routes/hyperverge.js";
 
 cloudinary.config({
