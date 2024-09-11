@@ -36,6 +36,7 @@ import searchStrategy from "../controller/strategy/searchStrategy.js";
 import campaignAdvertiser from "../controller/campaign/campaignAdvertiser.js";
 import getCampaignscount from "../controller/campaign/getCampaignscount.js";
 import getAllCampaignForAdmin from "../controller/getAllCampaignForAdmin.js";
+import editCampaign from "../controller/campaign/editCampaign.js";
 
 
 const router = Router();
@@ -49,11 +50,12 @@ router.post("/api/webhook/organization-created", createAgency);
 router
   .route("/api/campaigns/:userId")
   .get(campaignGet)
-  .patch(campaignUpdate)
-  .delete(deleteCampaign);
+  .patch(campaignUpdate);
 router.post("/api/campaigns", createCampaign); 
 router.get("/api/campaigns-agency/:agencyId", campaignAgency)
 router.get("/api/campaigns-advertiser/:advertiserId", campaignAdvertiser);
+router.post("/api/edit-campaign",editCampaign);
+router.delete('/api/delete-campaign',deleteCampaign)
 
 //For Admin Control
 router.get("/api/get-all-campaigns", getAllCampaignForAdmin)
