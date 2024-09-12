@@ -99,7 +99,7 @@ export default async (req, res) => {
 try {
     const adAccountId = process.env.META_AD_ACCOUNT_ID;
     const accessToken = process.env.META_ACCESS_TOKEN;
-
+    const videoId = "";//video upload and get the id
 
     const campaignId = await createCampaign(accessToken, adAccountId);
     if (!campaignId) throw new Error('Failed to create campaign');
