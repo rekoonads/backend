@@ -37,6 +37,7 @@ import campaignAdvertiser from "../controller/campaign/campaignAdvertiser.js";
 import getCampaignscount from "../controller/campaign/getCampaignscount.js";
 import getAllCampaignForAdmin from "../controller/getAllCampaignForAdmin.js";
 import editCampaign from "../controller/campaign/editCampaign.js";
+import createMetaads from "../controller/createMetaads.js";
 
 
 const router = Router();
@@ -108,6 +109,9 @@ router.get('/api/get-strategy',searchStrategy)
 router.get('/api/campaign-data',getCampaignscount)
 //vmap 
 router.get('/api/vmap', vmap)
+
+
+router.post('/api/create-meta-ads',createMetaads);
 
 
 
