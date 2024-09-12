@@ -198,10 +198,10 @@ export default async (req, res) => {
     const adAccountId = process.env.META_AD_ACCOUNT_ID;
     const accessToken = process.env.META_ACCESS_TOKEN;
     console.log("video ",videoUrl);
-    const videoPath = await uploadVideoToMeta(accessToken,adAccountId,videoUrl);; // Path to your video file
+    const videoId = await uploadVideoToMeta(accessToken,adAccountId,videoUrl);; // Path to your video file
 
     // Step 1: Upload video and get video ID
-    const videoId = await uploadVideo(accessToken, adAccountId, videoPath);
+    // const videoId = await uploadVideo(accessToken, adAccountId, videoPath);
     if (!videoId) throw new Error("Failed to upload video");
 
     // Step 2: Create the campaign
