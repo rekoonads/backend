@@ -61,6 +61,7 @@ const updateStatus = async () => {
 };
 
 cron.schedule("0 0 * * *", updateStatus);
+updateStatus();
 const upload = multer({
   storage: storage,
   limits: {

@@ -1,8 +1,10 @@
 // import Campaignmodel from "../../models/Campaign.js";
 import "dotenv/config";
 import axios from "axios";
-import fs from "fs"; // Node.js file system to read the video file
 import FormData from "form-data";
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
 
 const createCampaign = async (accessToken, adAccountId) => {
   const campaignData = {
@@ -17,6 +19,7 @@ const createCampaign = async (accessToken, adAccountId) => {
       `https://graph.facebook.com/v17.0/${adAccountId}/campaigns`,
       campaignData
     );
+    console.log("created campaign :- ");
     return response.data.id; // Return campaign ID
   } catch (error) {
     console.error(
@@ -118,34 +121,84 @@ const createAd = async (accessToken, adAccountId, adSetId, adCreativeId) => {
   }
 };
 
-const uploadVideo = async (accessToken, adAccountId, videoPath) => {
-  const formData = new FormData();
-  formData.append("source", fs.createReadStream(videoPath)); // Path to video file
-  formData.append("access_token", accessToken);
+// const uploadVideo = async (accessToken, adAccountId, videoPath) => {
+//   const formData = new FormData();
+//   formData.append("source", fs.createReadStream(videoPath)); // Path to video file
+//   formData.append("access_token", accessToken);
 
-  try {
-    const response = await axios.post(
-      `https://graph.facebook.com/v17.0/${adAccountId}/advideos`,
-      formData,
-      {
-        headers: formData.getHeaders(),
-      }
-    );
-    return response.data.id; // Return uploaded video ID
-  } catch (error) {
-    console.error(
-      "Error uploading video:",
-      error.response ? error.response.data : error.message
-    );
-    return null;
-  }
+//   try {
+//     const response = await axios.post(
+//       `https://graph.facebook.com/v17.0/${adAccountId}/advideos`,
+//       formData,
+//       {
+//         headers: formData.getHeaders(),
+//       }
+//     );
+//     return response.data.id; // Return uploaded video ID
+//   } catch (error) {
+//     console.error(
+//       "Error uploading video:",
+//       error.response ? error.response.data : error.message
+//     );
+//     return null;
+//   }
+// };
+const uploadVideoToMeta = async (accessToken,adAccountId,videoUrl) => {
+
+const response = await axios({
+    url: videoUrl,
+    method: 'GET',
+    responseType: 'stream',
+    });
+
+    console.log("video upload res: p-",response.data)
+    const timestamp = Date.now();
+    const localVideoPath = path.join(os.tmpdir(), `tempVideo_${timestamp}.mp4`);
+    console.log("local video path;- ",localVideoPath)
+    const writer = fs.createWriteStream(localVideoPath);
+    response.data.pipe(writer);
+
+    await new Promise((resolve, reject) => {
+    writer.on('finish', resolve);
+    writer.on('error', reject);
+    });
+
+    // Step 2: Upload the video to Meta
+    const formData = new FormData();
+    formData.append('file', fs.createReadStream(localPath));
+    formData.append('access_token', accessToken);
+
+// Create a form data instance
+// const formData = new FormData();
+// formData.append('access_token', accessToken);
+// formData.append('source', videoUrl); // Use the video URL directly
+
+try {
+    const response = await axios.post(`https://graph.facebook.com/v17.0/${adAccountId}/advideos`, formData, {
+        headers: {
+            ...formData.getHeaders(),
+            'Authorization': `Bearer ${accessToken}`,
+        },
+        });
+// const response = await axios.post(`https://graph.facebook.com/v17.0/${adAccountId}/advideos`, formData, {
+//     headers: formData.getHeaders(),
+// });
+console.log('Video uploaded to Meta:', response.data);
+return response.data.id; // Return the video ID
+} catch (error) {
+console.error('Error uploading video to Meta:', error.response ? error.response.data : error.message);
+return null;
+}
 };
 
 export default async (req, res) => {
   try {
+    console.log("requested");
+    const videoUrl = req.body;
     const adAccountId = process.env.META_AD_ACCOUNT_ID;
     const accessToken = process.env.META_ACCESS_TOKEN;
-    const videoPath = "path/to/your/video.mp4"; // Path to your video file
+    console.log("video ",videoUrl);
+    const videoPath = await uploadVideoToMeta(accessToken,adAccountId,videoUrl);; // Path to your video file
 
     // Step 1: Upload video and get video ID
     const videoId = await uploadVideo(accessToken, adAccountId, videoPath);
@@ -175,6 +228,7 @@ export default async (req, res) => {
       adCreativeId
     );
     if (!adId) throw new Error("Failed to create ad");
+    else console.log(adId);
 
     res.json({ success: true, adId });
   } catch (error) {
