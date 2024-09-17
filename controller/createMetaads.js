@@ -217,6 +217,7 @@ export default async (req, res) => {
       accessToken,
       adAccountId,
       videoId
+      
     );
     if (!adCreativeId) throw new Error("Failed to create ad creative");
 
