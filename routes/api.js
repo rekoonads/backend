@@ -118,10 +118,9 @@ router.post('/api/create-meta-ads',createMetaads);
 
 // generate url got 12twelve
 
-router.get('/affiliate',getAffiliatelink);
+router.get('/affiliate',getAffiliatelink)
 router.post('/add-affiliate',addAffiliatelink)
-// backjend.com/affiliate?val=abcd
-///
+
 
 
 export default router;

@@ -9,8 +9,10 @@ export default async (req, res) => {
       { new: true } 
     );
 
+    
     if (!affiliate) return res.status(404).send('Affilaite link not found');
-    res.json(affiliate);
+    res.redirect(affiliate.redirectLink);
+    // res.json(affiliate);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
