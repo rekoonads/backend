@@ -1,5 +1,5 @@
 import express from "express";
-import { mongo,connectSecondDB } from "./db/mongoConnection.js";
+import { mongo } from "./db/mongoConnection.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import "dotenv/config";
@@ -107,7 +107,7 @@ app.post("/upload_video", upload.single("video"), (req, res) => {
 
 // Save server loader function
 let server;
-Promise.all([mongo(),connectSecondDB()])
+Promise.all([mongo()])
   .then(() => {
     server = app.listen(PORT, () => {
       console.log(`The Server is running on ${PORT}`);

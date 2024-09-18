@@ -25,7 +25,7 @@ import getStrategyByCampaignId from "../controller/strategy/getStrategyByCampaig
 import getBill from "../controller/bill/getBill.js";
 import uploadFile from "../controller/cloudinery/uploadFile.js";
 import updateBalance from "../controller/updateBalance.js";
-import vmap from '../controller/vmap.js'
+import vmap from "../controller/vmap.js";
 import addBidder from "../controller/addBidder.js";
 import getBidderDetails from "../controller/getBidderDetails.js";
 import getAdd from "../controller/getAdd.js";
@@ -38,9 +38,6 @@ import getCampaignscount from "../controller/campaign/getCampaignscount.js";
 import getAllCampaignForAdmin from "../controller/getAllCampaignForAdmin.js";
 import editCampaign from "../controller/campaign/editCampaign.js";
 import createMetaads from "../controller/createMetaads.js";
-import getAffiliatelink from "../controller/getAffiliatelink.js";
-import addAffiliatelink from "../controller/addAffiliatelink.js";
-
 
 const router = Router();
 //Agency
@@ -50,19 +47,15 @@ router.post("/api/webhook/user-created", userCreate);
 router.post("/api/webhook/organization-created", createAgency);
 
 //Campaign
-router
-  .route("/api/campaigns/:userId")
-  .get(campaignGet)
-  .patch(campaignUpdate);
-router.post("/api/campaigns", createCampaign); 
-router.get("/api/campaigns-agency/:agencyId", campaignAgency)
+router.route("/api/campaigns/:userId").get(campaignGet).patch(campaignUpdate);
+router.post("/api/campaigns", createCampaign);
+router.get("/api/campaigns-agency/:agencyId", campaignAgency);
 router.get("/api/campaigns-advertiser/:advertiserId", campaignAdvertiser);
-router.post("/api/edit-campaign",editCampaign);
-router.delete('/api/delete-campaign',deleteCampaign)
+router.post("/api/edit-campaign", editCampaign);
+router.delete("/api/delete-campaign", deleteCampaign);
 
 //For Admin Control
-router.get("/api/get-all-campaigns", getAllCampaignForAdmin)
-
+router.get("/api/get-all-campaigns", getAllCampaignForAdmin);
 
 //Strategy
 router
@@ -72,9 +65,8 @@ router
   .delete(deleteStrategy);
 router.post("/api/strategy", createStrategy);
 
-//getting the strategy by campaignId 
-router.get('/api/strategy-campaign/:campaignId', getStrategyByCampaignId)
-
+//getting the strategy by campaignId
+router.get("/api/strategy-campaign/:campaignId", getStrategyByCampaignId);
 
 //Advertisers
 router.post("/api/add-advertiser", createAdvertiser);
@@ -85,42 +77,34 @@ router
   .patch(updateAdvertisers)
   .delete(deleteAdvertisers);
 
-  
 //Search users
 router.get("/api/search-user/:user_id", searchUser);
 router.post("/api/update-agency/:agency_id", updateAgency);
 router.get("/api/search-agency/:agency_id", getAgency);
-router.patch("/api/update_user",update_details)
+router.patch("/api/update_user", update_details);
 
-//Payment 
-router.post("/api/bill", addBIll)
-router.get('/api/bill/:campaignId', getBill)
+//Payment
+router.post("/api/bill", addBIll);
+router.get("/api/bill/:campaignId", getBill);
 router.post("/api/add-website", addWebsite);
 
 //Cloudinery File Uploads
-router.post('/api/file-cloud', uploadFile)
-router.patch('/api/update-balance', updateBalance)
-router.post('/api/add-bidder',addBidder);
-router.get('/api/get-bidder-details', getBidderDetails)
-router.get('/api/get-ads',getAdd)
-router.get('/api/get-video',getVideo)
-router.post('/api/save-error',saveError)
-router.get('/api/get-campaign',searchCampaign)
+router.post("/api/file-cloud", uploadFile);
+router.patch("/api/update-balance", updateBalance);
+router.post("/api/add-bidder", addBidder);
+router.get("/api/get-bidder-details", getBidderDetails);
+router.get("/api/get-ads", getAdd);
+router.get("/api/get-video", getVideo);
+router.post("/api/save-error", saveError);
+router.get("/api/get-campaign", searchCampaign);
 
-router.get('/api/get-strategy',searchStrategy)
-router.get('/api/campaign-data',getCampaignscount)
-//vmap 
-router.get('/api/vmap', vmap)
+router.get("/api/get-strategy", searchStrategy);
+router.get("/api/campaign-data", getCampaignscount);
+//vmap
+router.get("/api/vmap", vmap);
 
-
-router.post('/api/create-meta-ads',createMetaads);
-
+router.post("/api/create-meta-ads", createMetaads);
 
 // generate url got 12twelve
-
-router.get('/affiliate',getAffiliatelink)
-router.post('/add-affiliate',addAffiliatelink)
-
-
 
 export default router;

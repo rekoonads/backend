@@ -70,26 +70,30 @@ router.post("/verify", async (req, res) => {
     console.error(error);
   }
 });
-  router.post('/wallet-pay',async (req, res) =>{
-    try {
-      const { userId, amount } = req.body;
-      const user = await userModel.findOne({ userId });
+router.post("/wallet-pay", async (req, res) => {
+  try {
+    const { userId, amount } = req.body;
+    const user = await userModel.findOne({ userId });
 
-      if (!user) {
-        return res.status(404).json({ message: 'User not found' });
-      }
-      if (user.walletBalance < amount) {
-        return res.status(400).json({ message: 'Insufficient wallet balance' });
-      }
-
-      user.walletBalance -= amount;
-
-      await user.save();
-
-      return res.status(200).json({ message: 'Payment successful', newBalance: user.walletBalance });
-    } catch (error) {
-      return res.status(500).json({ message: 'Internal server error', error: error.message });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
-  })
+    if (user.walletBalance < amount) {
+      return res.status(400).json({ message: "Insufficient wallet balance" });
+    }
+
+    user.walletBalance -= amount;
+
+    await user.save();
+
+    return res
+      .status(200)
+      .json({ message: "Payment successful", newBalance: user.walletBalance });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
+});
 
 export default router;
