@@ -184,7 +184,7 @@ const openPage = async (userId, campaignId, strategyId) => {
                       }
                   } catch (e) {
                       // Handle the case where campaignElement or other elements don't exist in the row
-                      console.log("Error processing row:", e.message);
+                      // console.log("Error processing row:", e.message);
                   }
               }
           } catch(error){
@@ -210,6 +210,7 @@ const openPage = async (userId, campaignId, strategyId) => {
           // await driver.findElement(By.id("start")).sendKeys(start_date);
           const startElement = await driver.wait(until.elementLocated(By.id("start")),20000);
           await driver.wait(until.elementIsVisible(startElement), 10000);
+          
           await startElement.sendKeys(start_date);
           await driver.findElement(By.id("endSet_specific")).click();
           await driver.findElement(By.id("end")).sendKeys(end_date);
