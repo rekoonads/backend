@@ -38,6 +38,7 @@ import getCampaignscount from "../controller/campaign/getCampaignscount.js";
 import getAllCampaignForAdmin from "../controller/getAllCampaignForAdmin.js";
 import editCampaign from "../controller/campaign/editCampaign.js";
 import createMetaads from "../controller/createMetaads.js";
+import axios from 'axios';
 
 const router = Router();
 //Agency
@@ -104,6 +105,25 @@ router.get("/api/campaign-data", getCampaignscount);
 router.get("/api/vmap", vmap);
 
 router.post("/api/create-meta-ads", createMetaads);
+router.get("/get-instacount",(req,res)=>{
+  const user = req.query.user;
+const url = `https://www.instagram.com/${user}`;
+console.log(url);
+
+axios.get(url)
+    .then(response => {
+        const body = response.data;
+        const searchString = 'meta property="og:description" content="';
+        if (body.indexOf(searchString) !== -1) {
+            console.log("followers:", body.split(searchString)[1].split("Followers")[0].trim());
+        }
+        res.json({total_follower : body.split(searchString)[1].split("Followers")[0].trim()})
+    })
+    .catch(err => {
+        console.error('Error fetching the URL:', err);
+    });
+
+})
 
 // generate url got 12twelve
 
