@@ -52,24 +52,12 @@ const openPage = async (userId, campaignId, strategyId) => {
     }
 
     let options = new chrome.Options();
-    options
-      .addArguments
-      // "--headless",
-      // "--disable-gpu",
-      // "--no-sandbox",
-      // "--disable-dev-shm-usage"
-      ();
-    // let options = new firefox.Options();
-    // options.addArguments("--headless");
+    options.addArguments();
 
     let driver = await new Builder()
       .forBrowser("chrome")
       .setChromeOptions(options)
       .build();
-    // let driver = await new Builder()
-    // .forBrowser('firefox')
-    // .setFirefoxOptions(options)
-    // .build();
 
     try {
       await driver.get(url);
@@ -110,13 +98,13 @@ const openPage = async (userId, campaignId, strategyId) => {
             found = true;
             console.log(`Found ${user_name}`);
             await aElement.click();
-
             break;
           }
         }
       } catch (error) {
         console.log(`Error finding advertiser: ${error}`);
       }
+
       let banner = false;
       let campaign_found = false;
 
@@ -131,73 +119,79 @@ const openPage = async (userId, campaignId, strategyId) => {
         await driver.findElement(By.id("submit")).click();
         console.log("Advertiser created Successfully");
 
-          await driver
-            .wait(until.elementLocated(By.linkText("add a campaign")), 10000)
-            .click();
-          await driver.sleep(1000);
-        } else {
-          try {
-          
-              // Wait until the table is located
-              await driver.wait(until.elementLocated(By.css('.tableWrapper table tbody')), 10000);
-          
-              // Fetch all rows in the tbody
-              const rows = await driver.findElements(By.css('tbody tr'));
-          
-              for (let row of rows) {
-                  try {
-                      // Try to find both active and disabled campaign elements in the row
-                      let campaignElement;
-                    
-                      try {
-                          // First try to find a disabled campaign
-                          campaignElement = await row.findElement(By.css('td a.inlineIcon.iconCampaignDisabled'));
-                      } catch (e) {
-                          // If disabled campaign not found, try to find an active campaign
-                          campaignElement = await row.findElement(By.css('td a.inlineIcon.iconCampaign'));
-                      }
-          
-                      const campaignText = await campaignElement.getText();   
-                      console.log("campaign text:", campaignText, "my text:", campaignName);
-          
-                      if (campaignText === campaignName) {
-                          campaign_found = true;
-                          console.log(`Found campaign: ${campaignText}`);
-          
-                          // Find and click the "Banners" link in the row
-                          const addBannerLink = await row.findElement(By.css('a.inlineIcon.iconBanners'));
-                          await addBannerLink.click();
-          
-                          // Wait for the next page to
-                          const noBannerMessage = await driver.findElements(By.css('.tableMessage'));
-          
-                          if (noBannerMessage.length > 0) {
-                            const addNewBannerLink = await row.findElement(By.css('a.inlineIcon.iconBannerAdd'));
-                            
-                            await addNewBannerLink.click();
-                            console.log('Clicked "Banners" or "Add new banner".');
-                          }else {
-                            banner = true;
-                            console.log('found banner on this campaign');
-                                
-                            }
-                          break; 
-                      }
-                  } catch (e) {
-                      // Handle the case where campaignElement or other elements don't exist in the row
-                      // console.log("Error processing row:", e.message);
-                  }
+        await driver
+          .wait(until.elementLocated(By.linkText("add a campaign")), 10000)
+          .click();
+        await driver.sleep(1000);
+      } else {
+        try {
+          await driver.wait(
+            until.elementLocated(By.css(".tableWrapper table tbody")),
+            10000
+          );
+          const rows = await driver.findElements(By.css("tbody tr"));
+
+          for (let row of rows) {
+            try {
+              let campaignElement;
+
+              try {
+                campaignElement = await row.findElement(
+                  By.css("td a.inlineIcon.iconCampaignDisabled")
+                );
+              } catch (e) {
+                campaignElement = await row.findElement(
+                  By.css("td a.inlineIcon.iconCampaign")
+                );
               }
-          } catch(error){
-              console.log("error",error);
-              return {
-                status:"error",
-                message:error.message,
+
+              const campaignText = await campaignElement.getText();
+              console.log(
+                "campaign text:",
+                campaignText,
+                "my text:",
+                campaignName
+              );
+
+              if (campaignText === campaignName) {
+                campaign_found = true;
+                console.log(`Found campaign: ${campaignText}`);
+
+                const addBannerLink = await row.findElement(
+                  By.css("a.inlineIcon.iconBanners")
+                );
+                await addBannerLink.click();
+
+                const noBannerMessage = await driver.findElements(
+                  By.css(".tableMessage")
+                );
+
+                if (noBannerMessage.length > 0) {
+                  const addNewBannerLink = await row.findElement(
+                    By.css("a.inlineIcon.iconBannerAdd")
+                  );
+                  await addNewBannerLink.click();
+                  console.log('Clicked "Banners" or "Add new banner".');
+                } else {
+                  banner = true;
+                  console.log("found banner on this campaign");
+                }
+                break;
               }
+            } catch (e) {
+              // Handle the case where campaignElement or other elements don't exist in the row
+              // console.log("Error processing row:", e.message);
+            }
           }
-          
+        } catch (error) {
+          console.log("error", error);
+          return {
+            status: "error",
+            message: error.message,
+          };
         }
       }
+
       if (!campaign_found) {
         try {
           await driver
@@ -213,13 +207,12 @@ const openPage = async (userId, campaignId, strategyId) => {
           const start_date = await convertDateMode(startDate);
           const end_date = await convertDateMode(endDate);
           driver.sleep(2000);
-          // await driver.findElement(By.id("start")).sendKeys(start_date);
           const startElement = await driver.wait(
             until.elementLocated(By.id("start")),
             20000
           );
           await driver.wait(until.elementIsVisible(startElement), 10000);
-          
+
           await startElement.sendKeys(start_date);
           await driver.findElement(By.id("endSet_specific")).click();
           await driver.findElement(By.id("end")).sendKeys(end_date);
@@ -278,7 +271,6 @@ const openPage = async (userId, campaignId, strategyId) => {
       console.log("row finding", rows);
       for (let row of rows) {
         try {
-          // Wait until the row is visible
           await driver.wait(until.elementIsVisible(row), 10000);
 
           const linkElement = await row.findElement(
@@ -352,7 +344,7 @@ const openPage = async (userId, campaignId, strategyId) => {
             break;
           }
         } catch (error) {
-          console.log("erroe", error);
+          console.log("error", error);
           return {
             status: "error",
             message: error.message,
@@ -406,12 +398,6 @@ const openPage = async (userId, campaignId, strategyId) => {
         );
 
         await optionToSelect.click();
-        // const campaignidOptions = await campaignidSelect.findElements(
-        //   By.tagName("option")
-        // );
-        // if (campaignidOptions.length > 0) {
-        //   await campaignidOptions[campaignidOptions.length - 1].click();
-        // }
 
         await driver.findElement(By.id("link_submit")).click();
         await driver.findElement(By.linkText("VAST2 Invocation Code")).click();
