@@ -79,6 +79,39 @@ function getRandomIp() {
     .join(".");
 }
 
+// Function to check if IP is localhost or reserved
+function isReservedIP(ip) {
+  if (
+    ip === "::1" ||
+    ip === "127.0.0.1" ||
+    ip.startsWith("192.168.") ||
+    ip.startsWith("10.") ||
+    ip.startsWith("172.")
+  ) {
+    return true;
+  }
+  return false;
+}
+
+// Function to extract IPv4 from request
+function getIPv4(req) {
+  const forwardedFor = req.headers["x-forwarded-for"];
+  if (forwardedFor) {
+    const ips = forwardedFor.split(",").map((ip) => ip.trim());
+    for (const ip of ips) {
+      if (!isReservedIP(ip)) {
+        return ip;
+      }
+    }
+  }
+
+  if (!isReservedIP(req.ip)) {
+    return req.ip;
+  }
+
+  return getRandomIp();
+}
+
 const { urlencoded, json } = pkg;
 const PORT = process.env.PORT || 8080;
 
@@ -119,51 +152,48 @@ app.post("/upload_video", upload.single("video"), (req, res) => {
 // API endpoint for IP and geolocation
 app.get("/api/track-ip", async (req, res) => {
   try {
-    const ip = req.query.ip || req.ip || getRandomIp();
-    let response = await fetch(`https://ipapi.co/${ip}/json/`);
-    let data = await response.json();
+    const ip = req.query.ip || getRandomIp();
+    console.log(`Tracking IP: ${ip}`);
 
-    if (data.error) {
-      // Fallback to ipgeolocation.io API if ipapi.co fails
-      const apiKey = process.env.IPGEOLOCATION_API_KEY; // Make sure to set this in your .env file
-      response = await fetch(
-        `https://api.ipgeolocation.io/ipgeo?apiKey=${apiKey}&ip=${ip}`
-      );
-      data = await response.json();
+    // Fetch geolocation data
+    const geoResponse = await fetch(`https://ipapi.com/ip_api.php?ip=${ip}`);
+    const geoData = await geoResponse.json();
 
-      if (!data.latitude || !data.longitude) {
-        return res
-          .status(404)
-          .json({ error: "Geolocation information not found", ip });
-      }
+    if (geoData.error) {
+      console.log(`Error from ipapi.com: ${JSON.stringify(geoData)}`);
+      return res
+        .status(404)
+        .json({ error: "Geolocation information not found", ip });
     }
 
-    const deviceInfo = {
-      browser: req.useragent.browser,
-      version: req.useragent.version,
-      os: req.useragent.os,
-      platform: req.useragent.platform,
-      isMobile: req.useragent.isMobile,
-      isDesktop: req.useragent.isDesktop,
-      isBot: req.useragent.isBot,
-    };
+    // Fetch user agent data
+    const uaResponse = await fetch(
+      `http://ip-api.com/json/${ip}?fields=mobile`
+    );
+    const uaData = await uaResponse.json();
 
     res.json({
-      ip: data.ip,
-      country: data.country_name || data.country_name,
-      region: data.region || data.state_prov,
-      city: data.city,
-      latitude: data.latitude,
-      longitude: data.longitude,
-      timezone: data.timezone || data.time_zone.name,
-      deviceInfo,
+      ip: geoData.ip,
+      country: geoData.country_name,
+      region: geoData.region,
+      city: geoData.city,
+      latitude: geoData.latitude,
+      longitude: geoData.longitude,
+      timezone: geoData.timezone,
+      isp: geoData.org,
+      deviceType: uaData.mobile ? "Mobile" : "Desktop",
     });
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Detailed error:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
 
+// Add a test endpoint to check the current IP
+app.get("/api/current-ip", (req, res) => {
+  const ip = getIPv4(req);
+  res.json({ ip });
+});
 // Save server loader function
 let server;
 Promise.all([mongo()])
