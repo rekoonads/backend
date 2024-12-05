@@ -15,6 +15,8 @@ import { CloudinaryStorage } from "multer-storage-cloudinary";
 import cron from "node-cron";
 import Bidder from "./models/bidder.js";
 import hypervergeRouter from "./routes/hyperverge.js";
+import useragent from "express-useragent";
+import fetch from "node-fetch";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
@@ -68,11 +70,20 @@ const upload = multer({
     fileSize: 500 * 1024 * 1024,
   },
 });
+
+// Helper function to get client IP
+function getRandomIp() {
+  return Array(4)
+    .fill(0)
+    .map(() => Math.floor(Math.random() * 256))
+    .join(".");
+}
+
 const { urlencoded, json } = pkg;
 const PORT = process.env.PORT || 8080;
 
 const app = express();
-
+app.use(useragent.express());
 app.use(urlencoded({ extended: false }));
 app.use(json());
 app.use(cookieParser());
@@ -102,6 +113,54 @@ app.post("/upload_video", upload.single("video"), (req, res) => {
   } else {
     console.error("File upload failed:", req.file);
     res.status(400).json({ error: "Video upload failed" });
+  }
+});
+
+// API endpoint for IP and geolocation
+app.get("/api/track-ip", async (req, res) => {
+  try {
+    const ip = req.query.ip || req.ip || getRandomIp();
+    let response = await fetch(`https://ipapi.co/${ip}/json/`);
+    let data = await response.json();
+
+    if (data.error) {
+      // Fallback to ipgeolocation.io API if ipapi.co fails
+      const apiKey = process.env.IPGEOLOCATION_API_KEY; // Make sure to set this in your .env file
+      response = await fetch(
+        `https://api.ipgeolocation.io/ipgeo?apiKey=${apiKey}&ip=${ip}`
+      );
+      data = await response.json();
+
+      if (!data.latitude || !data.longitude) {
+        return res
+          .status(404)
+          .json({ error: "Geolocation information not found", ip });
+      }
+    }
+
+    const deviceInfo = {
+      browser: req.useragent.browser,
+      version: req.useragent.version,
+      os: req.useragent.os,
+      platform: req.useragent.platform,
+      isMobile: req.useragent.isMobile,
+      isDesktop: req.useragent.isDesktop,
+      isBot: req.useragent.isBot,
+    };
+
+    res.json({
+      ip: data.ip,
+      country: data.country_name || data.country_name,
+      region: data.region || data.state_prov,
+      city: data.city,
+      latitude: data.latitude,
+      longitude: data.longitude,
+      timezone: data.timezone || data.time_zone.name,
+      deviceInfo,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
