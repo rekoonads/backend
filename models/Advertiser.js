@@ -1,10 +1,9 @@
-import { model, Schema } from 'mongoose';
+import { model, Schema } from "mongoose";
 const advertiser = new Schema(
   {
-    
     advertiserId: { type: String },
     advertiserName: { type: String },
-    createdBy : {type: String},
+    createdBy: { type: String },
     advertiserLogo: { type: String },
     gstNumber: { type: String },
     legalName: { type: String },
@@ -14,6 +13,6 @@ const advertiser = new Schema(
   },
   {
     timestamps: true,
-  },
+  }
 );
-export default model('Advertisers', advertiser);
+export default model("Advertisers", advertiser);

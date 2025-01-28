@@ -45,6 +45,15 @@ import {
   getUserData,
   publishAd,
 } from "../controller/dv360/dv360Controller.js";
+import { createPublisher } from "../controller/publishers/createPublisher.js";
+import getPublishers from "../controller/publishers/getPublishers.js";
+import updatePublisherStatus from "../controller/publishers/updatePublisherStatus.js";
+import deletePublisher from "../controller/publishers/deletePublisher.js";
+import {
+  addPublisherWebsite,
+  getPublisherWebsites,
+} from "../controller/publishers/websiteController.js";
+import updateBid from "../controller/strategy/updateBid.js";
 
 const router = Router();
 //Agency
@@ -71,9 +80,18 @@ router
   .patch(updateStrategy)
   .delete(deleteStrategy);
 router.post("/api/strategy", createStrategy);
+router.put("/api/strategy/:strategyId/bid", updateBid);
 
 //getting the strategy by campaignId
 router.get("/api/strategy-campaign/:campaignId", getStrategyByCampaignId);
+
+//Publisher
+router.post("/api/add-publisher", createPublisher);
+router.get("/api/publishers", getPublishers);
+router.put("/api/publishers/:publisherId", updatePublisherStatus);
+router.delete("/api/publishers/:publisherId", deletePublisher);
+router.post("/api/publishers/:publisherId/websites", addPublisherWebsite);
+router.get("/api/publishers/:publisherId/websites", getPublisherWebsites);
 
 //Advertisers
 router.post("/api/add-advertiser", createAdvertiser);

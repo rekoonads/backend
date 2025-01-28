@@ -19,20 +19,35 @@ export default async (req, res) => {
     deliveryType,
     creatives,
     duration,
-    campaignId
+    campaignId,
+    mediaType,
+    bannerSize,
+    bannerFormat,
+    bannerClickThroughUrl,
+    adTitle,
+    adDescription,
+    callToAction,
+    // New bidding fields
+    currentBid,
+    biddingType,
   } = req.body;
 
   console.log(`User Sent Data : `, req.body);
 
   try {
-    // Check if a strategy with the given strategyId exists
     let strategy = await Strategy.findOne({ strategyId });
 
     if (strategy) {
       const updatedStrategy = await Strategy.findOneAndUpdate(
         { strategyId },
-        { $set: req.body },
-        { new: true } 
+        {
+          $set: {
+            ...req.body,
+            currentBid: currentBid || strategy.currentBid,
+            biddingType: biddingType || strategy.biddingType,
+          },
+        },
+        { new: true }
       );
       return res.status(200).json({ updatedStrategy });
     } else {
@@ -54,9 +69,18 @@ export default async (req, res) => {
         deliveryType,
         creatives,
         duration,
-        campaignId
+        campaignId,
+        mediaType,
+        bannerSize,
+        bannerFormat,
+        bannerClickThroughUrl,
+        adTitle,
+        adDescription,
+        callToAction,
+        currentBid: currentBid || 0,
+        biddingType: biddingType || "manual",
       });
-      console.log("new strategy data :- ",newStrategy)
+      console.log("new strategy data :- ", newStrategy);
       const savedStrategy = await newStrategy.save();
       return res.status(201).json({ savedStrategy });
     }
