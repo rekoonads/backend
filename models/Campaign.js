@@ -1,4 +1,5 @@
 import { model, Schema } from "mongoose";
+
 const campaignSchema = new Schema(
   {
     userId: { type: String, required: true },
@@ -17,11 +18,29 @@ const campaignSchema = new Schema(
     campaignAdvertiserBudget: { type: String, required: true },
     campaignBudget: { type: String, required: true },
     campaignType: { type: String, required: true },
-    startDate: { type: String, required: true },
-    endDate: { type: String, required: true },
+    status: {
+      type: String,
+      enum: ["scheduled", "active", "expired", "paused"],
+      default: "scheduled",
+    },
+    startDate: { type: Date, required: true },
+    endDate: { type: Date, required: true },
   },
   { timestamps: true }
 );
-const Campaignmodel = model("campaigns", campaignSchema);
 
+// Update status method
+campaignSchema.methods.updateStatus = function () {
+  const now = new Date();
+  if (now < this.startDate) {
+    this.status = "scheduled";
+  } else if (now > this.endDate) {
+    this.status = "expired";
+  } else {
+    this.status = "active";
+  }
+  return this.save();
+};
+
+const Campaignmodel = model("campaigns", campaignSchema);
 export default Campaignmodel;

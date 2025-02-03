@@ -8,6 +8,8 @@ import apiRouter from "./routes/api.js";
 import helmet from "helmet";
 import compression from "compression";
 import payment from "./routes/payment.js";
+import newRoute from "./routes/adserver.js";
+import campaignRoutes from "./routes/campaignRoutes.js";
 import multer from "multer";
 import pkg2 from "cloudinary";
 const { v2: cloudinary } = pkg2;
@@ -139,13 +141,15 @@ app.use(
 );
 
 // Routing
+app.use(express.json());
 app.get("/", (req, res) => {
   res.json({ message: "Hello World from backend" });
 });
 app.use("/", apiRouter);
 app.use("/api/payment", payment);
 app.use("/api/hyperverge", hypervergeRouter);
-
+app.use(newRoute);
+app.use("/api/campaigns", campaignRoutes);
 app.post("/upload_video", upload.single("video"), (req, res) => {
   if (req.file && req.file.path) {
     console.log("File uploaded:", req.file);
