@@ -1,4 +1,6 @@
 import Strategy from "../../models/Strategy.js";
+import Demographics from "../../models/Demographics.js";
+import FilteredStrategy from "../../models/FilteredStrategy.js";
 
 export default async (req, res) => {
   const {
@@ -11,6 +13,7 @@ export default async (req, res) => {
     selectedOption,
     selectedChannels,
     ageRange,
+    targetedAgeGroups, // Added targetedAgeGroups
     gender,
     screens,
     audiences,
@@ -27,7 +30,6 @@ export default async (req, res) => {
     adTitle,
     adDescription,
     callToAction,
-    // New bidding fields
     currentBid,
     biddingType,
   } = req.body;
@@ -35,6 +37,25 @@ export default async (req, res) => {
   console.log(`User Sent Data : `, req.body);
 
   try {
+    const ageQueries = targetedAgeGroups.map((range) => {
+      const [min, max] = range.split("-").map(Number);
+      return { age: { $gte: min, $lte: max } };
+    });
+    console.log(gender);
+    const query = {
+      $or: ageQueries,
+      gender: gender,
+      interests: { $in: audiences }, // Match any of the interests
+    };
+    const targetedDemographics = await Demographics.find(query);
+    console.log("Targeted Demographics:", targetedDemographics);
+    const newFilteredStrategy = new FilteredStrategy({
+      strategyId,
+      userId,
+      demographics: targetedDemographics,
+    });
+    await newFilteredStrategy.save();
+
     let strategy = await Strategy.findOne({ strategyId });
 
     if (strategy) {

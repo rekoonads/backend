@@ -81,7 +81,6 @@ router
   .delete(deleteStrategy);
 router.post("/api/strategy", createStrategy);
 router.put("/api/strategy/:strategyId/bid", updateBid);
-
 //getting the strategy by campaignId
 router.get("/api/strategy-campaign/:campaignId", getStrategyByCampaignId);
 

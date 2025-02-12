@@ -1,5 +1,6 @@
 import express from "express";
 import { mongo } from "./db/mongoConnection.js";
+import { getInterestCounts } from "./seeds/intrestCount.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import "dotenv/config";
@@ -159,6 +160,8 @@ app.post("/upload_video", upload.single("video"), (req, res) => {
     res.status(400).json({ error: "Video upload failed" });
   }
 });
+//interest
+app.get("/api/interests", getInterestCounts);
 
 // API endpoint for IP and geolocation
 app.get("/api/track-ip", async (req, res) => {
